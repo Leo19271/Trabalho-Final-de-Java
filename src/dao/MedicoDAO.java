@@ -103,4 +103,79 @@ public class MedicoDAO {
 			BancoDados.desconectar();
 		}
 	}
+	
+	public List<Medico> buscarMedicosPorNome(String nome) throws SQLException{
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+
+			st = conn.prepareStatement("select * from medico where nome LIKE ?");
+
+			st.setString(1, "%" + nome + "%");
+
+			rs = st.executeQuery();
+			
+			List<Medico> listaMedicos = new ArrayList<>();
+
+			if (rs.next()) {
+
+				Medico medico = new Medico();
+				
+				medico.setNome(rs.getString("nome"));
+				medico.setCrm(rs.getString("numeroCRM"));
+				medico.setTelefone(rs.getString("telefone"));
+				medico.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+				medico.getEspecialidade().setIdEspecialidade(rs.getInt("idEspecialidade"));
+				
+				listaMedicos.add(medico);
+
+			}
+
+			return listaMedicos;
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
+	
+	public Medico buscarMedicoPorCrm(String crm) throws SQLException{
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+
+			st = conn.prepareStatement("select * from medico where numeroCRM = ?");
+
+			st.setString(1, crm);
+
+			rs = st.executeQuery();
+
+			if (rs.next()) {
+
+				Medico medico = new Medico();
+				
+				medico.setNome(rs.getString("nome"));
+				medico.setCrm(rs.getString("numeroCRM"));
+				medico.setTelefone(rs.getString("telefone"));
+				medico.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+				medico.getEspecialidade().setIdEspecialidade(rs.getInt("idEspecialidade"));
+				
+				return medico;
+			}
+
+			return null;
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
 }

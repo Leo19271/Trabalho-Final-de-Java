@@ -9,6 +9,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
+
+import entities.Medico;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
@@ -37,17 +40,24 @@ public class EditarMedicoWindow extends JFrame {
 	private JTextField txtEstado;
 	private JTextField txtCidade;
 	private JTextField txtBairro;
-	private JTextField textField;
+	private JTextField txtRua;
 	private MedicosWindow medicoWindow;
+	private Medico medico;
+	private JFormattedTextField formattedCEP;
+	private JFormattedTextField formattedTelefone;
+	private JFormattedTextField formattedCRM;
+	private JTextField txtNum;
 	
-	public EditarMedicoWindow(MedicosWindow medicoWindow) {
+	public EditarMedicoWindow(MedicosWindow medicoWindow, Medico medico) {
+		
+		this.medico = medico;
 		
 		this.criarMascaraCrm();
 		this.criarMascaraTelefone();
 		this.criarMascaraCep();
 		
 		this.initComponents();
-		
+		this.popularComponents(medico);
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -56,7 +66,6 @@ public class EditarMedicoWindow extends JFrame {
 				fecharJanela();
 			}
 		});
-		
 		
 		this.medicoWindow = medicoWindow;
 	}
@@ -79,6 +88,19 @@ public class EditarMedicoWindow extends JFrame {
 		sobreWindow.setVisible(true);
 		
 		this.setVisible(false);
+	}
+	
+	private void popularComponents(Medico medico) {
+		
+		this.txtNome.setText(medico.getNome());
+		this.txtCidade.setText(medico.getEndereco().getCidade());
+		this.txtEstado.setText(medico.getEndereco().getEstado());
+		this.txtBairro.setText(medico.getEndereco().getBairro());
+		this.txtRua.setText(medico.getEndereco().getRua());
+		this.formattedCEP.setText(medico.getEndereco().getCep());
+		this.formattedCRM.setText(medico.getCrm());
+		this.formattedTelefone.setText(medico.getTelefone());
+		this.txtNum.setText(String.valueOf(medico.getEndereco().getNumero()));
 	}
 	
 	private void initComponents() {
@@ -106,7 +128,7 @@ public class EditarMedicoWindow extends JFrame {
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
 		
-		JFormattedTextField formattedCRM = new JFormattedTextField(mascaraCrm);
+		formattedCRM = new JFormattedTextField(mascaraCrm);
 		formattedCRM.setForeground(new Color(0, 0, 0));
 		formattedCRM.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		formattedCRM.setBounds(28, 69, 107, 20);
@@ -122,7 +144,7 @@ public class EditarMedicoWindow extends JFrame {
 		lblTelefone.setBounds(177, 53, 97, 14);
 		contentPane.add(lblTelefone);
 		
-		JFormattedTextField formattedTelefone = new JFormattedTextField(mascaraTelefone);
+		formattedTelefone = new JFormattedTextField(mascaraTelefone);
 		formattedTelefone.setForeground(Color.BLACK);
 		formattedTelefone.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		formattedTelefone.setBounds(177, 69, 115, 20);
@@ -142,7 +164,7 @@ public class EditarMedicoWindow extends JFrame {
 		lblCEP.setBounds(28, 133, 27, 14);
 		contentPane.add(lblCEP);
 		
-		JFormattedTextField formattedCEP = new JFormattedTextField(mascaraCep);
+		formattedCEP = new JFormattedTextField(mascaraCep);
 		formattedCEP.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		formattedCEP.setBounds(63, 131, 72, 20);
 		contentPane.add(formattedCEP);
@@ -185,20 +207,16 @@ public class EditarMedicoWindow extends JFrame {
 		lblRua.setBounds(195, 172, 53, 14);
 		contentPane.add(lblRua);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		textField.setColumns(10);
-		textField.setBounds(226, 169, 278, 20);
-		contentPane.add(textField);
+		txtRua = new JTextField();
+		txtRua.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtRua.setColumns(10);
+		txtRua.setBounds(226, 169, 278, 20);
+		contentPane.add(txtRua);
 		
 		JLabel lblNumero = new JLabel("Numero:");
 		lblNumero.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblNumero.setBounds(28, 206, 53, 14);
 		contentPane.add(lblNumero);
-		
-		JSpinner spinner = new JSpinner();
-		spinner.setBounds(83, 204, 72, 20);
-		contentPane.add(spinner);
 		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(10, 247, 494, 2);
@@ -218,6 +236,11 @@ public class EditarMedicoWindow extends JFrame {
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnCadastrar.setBounds(343, 260, 161, 40);
 		contentPane.add(btnCadastrar);
+		
+		txtNum = new JTextField();
+		txtNum.setBounds(83, 204, 72, 20);
+		contentPane.add(txtNum);
+		txtNum.setColumns(10);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

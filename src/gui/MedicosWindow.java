@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
@@ -35,7 +37,7 @@ public class MedicosWindow extends JFrame {
 	private JPanel contentPane;
 	private JPanel contentPane_1;
 	private StartWindow startWindow;
-	private JTextField textField;
+	private JTextField txtNomeMedico;
 	private JTable tblMedicos;
 	private MedicoService medicoService;
 	
@@ -88,9 +90,9 @@ public class MedicosWindow extends JFrame {
 		
 	}
 	
-	private void abrirEditarMedico() {
+	private void abrirEditarMedico(Medico medico) {
 		
-		EditarMedicoWindow editarMedico = new EditarMedicoWindow(this);
+		EditarMedicoWindow editarMedico = new EditarMedicoWindow(this, medico);
 		editarMedico.setVisible(true);
 		
 		this.setVisible(false);
@@ -122,6 +124,45 @@ public class MedicosWindow extends JFrame {
 		}
 	}
 	
+	private Medico buscarMedicoPorCrm(String crm) {
+		
+		try {
+			
+			return medicoService.buscarMedicoPorCrm(crm);
+			
+		}catch(Exception e){
+			
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Medico da base de dados.", "Erro Buscar Medico", JOptionPane.ERROR_MESSAGE);
+		}
+		return null;
+
+	}
+	
+	private void procurarMedicosPorNome() {
+		
+		try {
+			
+			DefaultTableModel modelo = (DefaultTableModel) tblMedicos.getModel();
+			modelo.fireTableDataChanged();
+			modelo.setRowCount(0);
+			
+			List<Medico> medicos = medicoService.buscarMedicosPorNome(this.txtNomeMedico.getText());
+			
+			for (Medico medico : medicos) {
+				
+				modelo.addRow(new Object[] { 
+					medico.getNome(), 
+					medico.getCrm(), 
+					medico.getEspecialidade().getNome()
+				});
+			}
+		}catch(Exception e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Medicos da base de dados.", "Erro Buscar Medicos", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
+	
 	private void initComponents() {
 		
 		
@@ -145,12 +186,18 @@ public class MedicosWindow extends JFrame {
 		lblNomeMedico.setBounds(10, 11, 87, 14);
 		contentPane_1.add(lblNomeMedico);
 		
-		textField = new JTextField();
-		textField.setBounds(99, 8, 313, 20);
-		contentPane_1.add(textField);
-		textField.setColumns(10);
+		txtNomeMedico = new JTextField();
+		txtNomeMedico.setBounds(99, 8, 313, 20);
+		contentPane_1.add(txtNomeMedico);
+		txtNomeMedico.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar\r\n");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				procurarMedicosPorNome();
+			}
+		});
 		btnBuscar.setBounds(422, 7, 89, 23);
 		contentPane_1.add(btnBuscar);
 		
@@ -183,7 +230,14 @@ public class MedicosWindow extends JFrame {
 		BtnEditarMedico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				abrirEditarMedico();
+				int selectedRow = tblMedicos.getSelectedRow();
+				
+				if(selectedRow >= 0) {
+					Medico medico = buscarMedicoPorCrm((String)(tblMedicos.getValueAt(selectedRow, 1)));
+					abrirEditarMedico(medico);
+				}else {
+					JOptionPane.showMessageDialog(null, "Selecione um médico na tabela para editar.", "Nenhum médico selecionado", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		

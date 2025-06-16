@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
@@ -21,6 +23,10 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import entities.Medico;
+import service.MedicoService;
+
 import javax.swing.JScrollPane;
 
 public class MedicosWindow extends JFrame {
@@ -30,10 +36,11 @@ public class MedicosWindow extends JFrame {
 	private JPanel contentPane_1;
 	private StartWindow startWindow;
 	private JTextField textField;
-	private JTable table;
+	private JTable tblMedicos;
+	private MedicoService medicoService;
 	
 	public MedicosWindow(StartWindow startWindow) {
-		this.initComponents();
+
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -42,7 +49,14 @@ public class MedicosWindow extends JFrame {
 				fecharJanela();
 			}
 		});
+		
+		this.initComponents();
+		
+		this.medicoService = new MedicoService();
+		
 		this.startWindow = startWindow;
+		
+		this.buscarMedicos();
 	}
 	
 	private void fecharJanela() {
@@ -72,6 +86,40 @@ public class MedicosWindow extends JFrame {
 		
 		this.setVisible(false);
 		
+	}
+	
+	private void abrirEditarMedico() {
+		
+		EditarMedicoWindow editarMedico = new EditarMedicoWindow(this);
+		editarMedico.setVisible(true);
+		
+		this.setVisible(false);
+		
+	}
+	
+	private void buscarMedicos() {
+		
+		try {
+			
+			DefaultTableModel modelo = (DefaultTableModel) tblMedicos.getModel();
+			modelo.fireTableDataChanged();
+			modelo.setRowCount(0);
+	
+			List<Medico> medicos = medicoService.buscarTodos();
+	
+			for (Medico medico : medicos) {
+	
+				modelo.addRow(new Object[] { 
+					medico.getNome(), 
+					medico.getCrm(), 
+					medico.getEspecialidade().getNome()
+				});
+			}
+		
+		} catch (Exception e) {
+
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Medicos da base de dados.", "Erro Buscar Medicos", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void initComponents() {
@@ -110,9 +158,9 @@ public class MedicosWindow extends JFrame {
 		scrollPane.setBounds(20, 36, 501, 205);
 		contentPane_1.add(scrollPane);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(
+		tblMedicos = new JTable();
+		scrollPane.setViewportView(tblMedicos);
+		tblMedicos.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -131,12 +179,19 @@ public class MedicosWindow extends JFrame {
 		BtnCadastrar.setBounds(358, 252, 154, 46);
 		contentPane_1.add(BtnCadastrar);
 		
-		JButton btnEditarMedico = new JButton("Editar Médico");
-		btnEditarMedico.setBounds(194, 252, 154, 46);
-		contentPane_1.add(btnEditarMedico);
-		table.getColumnModel().getColumn(0).setPreferredWidth(195);
-		table.getColumnModel().getColumn(1).setPreferredWidth(123);
-		table.getColumnModel().getColumn(2).setPreferredWidth(172);
+		JButton BtnEditarMedico = new JButton("Editar Médico");
+		BtnEditarMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirEditarMedico();
+			}
+		});
+		
+		BtnEditarMedico.setBounds(194, 252, 154, 46);
+		contentPane_1.add(BtnEditarMedico);
+		tblMedicos.getColumnModel().getColumn(0).setPreferredWidth(195);
+		tblMedicos.getColumnModel().getColumn(1).setPreferredWidth(123);
+		tblMedicos.getColumnModel().getColumn(2).setPreferredWidth(172);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

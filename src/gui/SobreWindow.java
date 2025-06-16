@@ -18,67 +18,67 @@ import java.awt.Font;
 
 public class SobreWindow extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JFrame Window;
+    private static final long serialVersionUID = 1L;
+    private JPanel contentPane;
+    private JFrame Window;
 
-	public SobreWindow(JFrame Window) {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-	
-				fecharJanela();
-			}
-		});
-		
-		this.initComponents();
-		this.Window = Window;
-	}
+    public SobreWindow(JFrame Window) {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                fecharJanela();
+            }
+        });
 
-	private void fecharJanela() {
-		
-		this.dispose();
-		this.Window.setVisible(true);
-		
-	}
-	
-	private void finalizarAplicacao() {
-		
-		System.exit(0);
-	}	
-	
-	private void initComponents() {
-		
-		setTitle("Sobre o aplicativo");
-		setResizable(false);
-		
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 400, 111);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Olá, esse aplicativo foi feito por Leonardo e Leodocir.");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(10, 0, 357, 50);
-		contentPane.add(lblNewLabel);
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu mnAplicativo = new JMenu("Aplicativo");
-		menuBar.add(mnAplicativo);
-		
-		JMenuItem mntmFechar = new JMenuItem("Fechar");
-		mntmFechar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				finalizarAplicacao();
-			}
-		});
-		mnAplicativo.add(mntmFechar);
-		
-		setLocationRelativeTo(null);
-	}
+        this.initComponents();
+        this.Window = Window;
+    }
+
+    private void fecharJanela() {
+        this.dispose();
+        this.Window.setVisible(true);
+    }
+
+    private void finalizarAplicacao() {
+        System.exit(0);
+    }
+
+    private void initComponents() {
+
+        setTitle("Sobre o aplicativo");
+        setResizable(false);
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 389, 179);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(null);
+
+        JLabel lblNewLabel = new JLabel("Olá, esse aplicativo foi feito por Leonardo e Leodocir.");
+        lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        lblNewLabel.setBounds(10, 0, 357, 50);
+        contentPane.add(lblNewLabel);
+
+        JLabel lblParaMaisInformacoes = new JLabel("Para mais informações contatar: leo.bonfanti@hotmail.com");
+        lblParaMaisInformacoes.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        lblParaMaisInformacoes.setBounds(10, 44, 357, 50);
+        contentPane.add(lblParaMaisInformacoes);
+
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+
+        JMenu mnAplicativo = new JMenu("Aplicativo");
+        menuBar.add(mnAplicativo);
+
+        JMenuItem mntmFechar = new JMenuItem("Fechar");
+        mntmFechar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                finalizarAplicacao();
+            }
+        });
+        mnAplicativo.add(mntmFechar);
+
+        setLocationRelativeTo(null);
+    }
 }

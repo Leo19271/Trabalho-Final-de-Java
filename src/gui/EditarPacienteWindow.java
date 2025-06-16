@@ -28,7 +28,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.ButtonGroup;
 
-public class CadastrarPacienteWindow extends JFrame {
+public class EditarPacienteWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -39,18 +39,14 @@ public class CadastrarPacienteWindow extends JFrame {
 	private JTextField txtEstado;
 	private JTextField txtCidade;
 	private JTextField txtBairro;
-	private JTextField txtRua;
+	private JTextField textField;
 	private PacientesWindow pacientesWindow;
-	private JTextField txtFormaPagamento;
+	private JTextField textField_1;
 	private ButtonGroup BGSEXO;
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFeminino;
-	private JTextField txtNum;
-	private JFormattedTextField formattedTelefone;
-	private JFormattedTextField formattedCEP;
-	private JFormattedTextField formattedDataNascimento;
 	
-	public CadastrarPacienteWindow(PacientesWindow pacientesWindow) {
+	public EditarPacienteWindow(PacientesWindow pacientesWindow) {
 		
 		this.criarMascaraDataNascimento();
 		this.criarMascaraTelefone();
@@ -92,24 +88,9 @@ public class CadastrarPacienteWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
-	private void limparComponentes() {
-		
-		this.txtNome.setText("");
-		this.txtEstado.setText("");
-		this.txtCidade.setText("");
-		this.txtBairro.setText("");
-		this.txtNum.setText("");
-		this.txtRua.setText("");
-		this.formattedCEP.setText("");
-		this.formattedTelefone.setText("");
-		this.formattedDataNascimento.setText("");
-		this.txtFormaPagamento.setText("");
-		this.rdbtnMasculino.setSelected(true);
-	}
-	
 	private void initComponents() {
 		
-		setTitle("Cadastrar Paciente");
+		setTitle("Editar informações do Paciente");
 		setResizable(false);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -131,7 +112,7 @@ public class CadastrarPacienteWindow extends JFrame {
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
 		
-		formattedDataNascimento = new JFormattedTextField(mascaraDataNascimento);
+		JFormattedTextField formattedDataNascimento = new JFormattedTextField(mascaraDataNascimento);
 		formattedDataNascimento.setBounds(28, 69, 107, 20);
 		formattedDataNascimento.setForeground(new Color(0, 0, 0));
 		formattedDataNascimento.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -147,7 +128,7 @@ public class CadastrarPacienteWindow extends JFrame {
 		lblTelefone.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblTelefone);
 		
-		formattedTelefone = new JFormattedTextField(mascaraTelefone);
+		JFormattedTextField formattedTelefone = new JFormattedTextField(mascaraTelefone);
 		formattedTelefone.setBounds(154, 69, 115, 20);
 		formattedTelefone.setForeground(Color.BLACK);
 		formattedTelefone.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -162,7 +143,7 @@ public class CadastrarPacienteWindow extends JFrame {
 		lblCEP.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblCEP);
 		
-		formattedCEP = new JFormattedTextField(mascaraCep);
+		JFormattedTextField formattedCEP = new JFormattedTextField(mascaraCep);
 		formattedCEP.setBounds(63, 165, 72, 20);
 		formattedCEP.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(formattedCEP);
@@ -205,34 +186,32 @@ public class CadastrarPacienteWindow extends JFrame {
 		lblRua.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblRua);
 		
-		txtRua = new JTextField();
-		txtRua.setBounds(234, 196, 278, 20);
-		txtRua.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		txtRua.setColumns(10);
-		contentPane.add(txtRua);
+		textField = new JTextField();
+		textField.setBounds(234, 196, 278, 20);
+		textField.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		textField.setColumns(10);
+		contentPane.add(textField);
 		
 		JLabel lblNumero = new JLabel("Numero:");
 		lblNumero.setBounds(28, 230, 53, 14);
 		lblNumero.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblNumero);
 		
+		JSpinner spinner = new JSpinner();
+		spinner.setBounds(83, 228, 72, 20);
+		contentPane.add(spinner);
+		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(10, 270, 533, 2);
 		contentPane.add(separator_1);
 		
-		JButton btnLimparCampos = new JButton("Limpar Campos");
-		btnLimparCampos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				limparComponentes();
-			}
-		});
-		btnLimparCampos.setBounds(277, 283, 128, 40);
+		JButton btnLimparCampos = new JButton("Reiniciar Informações");
+		btnLimparCampos.setBounds(212, 283, 161, 40);
 		btnLimparCampos.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(btnLimparCampos);
 		
-		JButton btnCadastrar = new JButton("Cadastrar");
-		btnCadastrar.setBounds(415, 283, 128, 40);
+		JButton btnCadastrar = new JButton("Confirmar Edição\r\n");
+		btnCadastrar.setBounds(382, 283, 161, 40);
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(btnCadastrar);
 		
@@ -263,15 +242,10 @@ public class CadastrarPacienteWindow extends JFrame {
 		lblFormaPagamento.setBounds(28, 101, 142, 14);
 		contentPane.add(lblFormaPagamento);
 		
-		txtFormaPagamento = new JTextField();
-		txtFormaPagamento.setBounds(28, 121, 224, 20);
-		contentPane.add(txtFormaPagamento);
-		txtFormaPagamento.setColumns(10);
-		
-		txtNum = new JTextField();
-		txtNum.setBounds(83, 228, 53, 20);
-		contentPane.add(txtNum);
-		txtNum.setColumns(10);
+		textField_1 = new JTextField();
+		textField_1.setBounds(28, 121, 224, 20);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

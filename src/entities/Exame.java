@@ -9,6 +9,9 @@ public class Exame {
 	private TipoExame tipoExame;
 
 	public Exame() {
+		
+		this.medico = new Medico();
+		this.paciente = new Paciente();
 	}
 
 	public Exame(String dataRealizacao, Paciente paciente, Medico medico, TipoExame tipoExame) {

@@ -17,14 +17,14 @@ import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JButton;
 
-public class CadastrarEspecialidadeWindow extends JFrame {
+public class EditarEspecialidadeWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private EspecialidadesWindow especialidadesWindow;
-	private JTextField txtEspecialidade;
+	private JTextField textField;
 	
-	public CadastrarEspecialidadeWindow(EspecialidadesWindow especialidadesWindow) {
+	public EditarEspecialidadeWindow(EspecialidadesWindow especialidadesWindow) {
 		this.initComponents();
 		
 		addWindowListener(new WindowAdapter() {
@@ -35,8 +35,6 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 			}
 		});
 		this.especialidadesWindow = especialidadesWindow;
-		
-		this.limparComponentes();
 	}
 	
 	private void fecharJanela() {
@@ -59,15 +57,9 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 		this.setVisible(false);
 	}
 
-	private void limparComponentes() {
-		
-		this.txtEspecialidade.setText("");
-			
-	}
-	
 	private void initComponents() {
 		
-		setTitle("Cadastrar Especialidade");
+		setTitle("Editar informações da Especialidade");
 		setResizable(false);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -82,22 +74,16 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 		lblNomeEspecialidade.setBounds(30, 31, 165, 14);
 		contentPane.add(lblNomeEspecialidade);
 		
-		txtEspecialidade = new JTextField();
-		txtEspecialidade.setBounds(175, 28, 165, 20);
-		contentPane.add(txtEspecialidade);
-		txtEspecialidade.setColumns(10);
+		textField = new JTextField();
+		textField.setBounds(175, 28, 165, 20);
+		contentPane.add(textField);
+		textField.setColumns(10);
 		
-		JButton btnCadastrar = new JButton("Cadastrar especialidade");
+		JButton btnCadastrar = new JButton("Editar especialidade");
 		btnCadastrar.setBounds(193, 73, 147, 48);
 		contentPane.add(btnCadastrar);
 		
-		JButton btnLimparCampo = new JButton("Limpar campo");
-		btnLimparCampo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				limparComponentes();
-			}
-		});
+		JButton btnLimparCampo = new JButton("Reiniciar Informações");
 		btnLimparCampo.setBounds(30, 73, 147, 48);
 		contentPane.add(btnLimparCampo);
 		

@@ -67,6 +67,14 @@ public class EspecialidadesWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
+	private void abrirEditarEspecialidade() {
+		
+		EditarEspecialidadeWindow editarEspecialidadeWindow = new EditarEspecialidadeWindow(this);
+		editarEspecialidadeWindow.setVisible(true);
+		
+		this.setVisible(false);
+	}
+	
 	private void initComponents() {
 		
 		setTitle("Especialidades");
@@ -104,6 +112,12 @@ public class EspecialidadesWindow extends JFrame {
 		contentPane.add(btnCadastrarEspecialidade);
 		
 		JButton btnEditarEspecialidade = new JButton("Editar Especialidade");
+		btnEditarEspecialidade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirEditarEspecialidade();
+			}
+		});
 		btnEditarEspecialidade.setBounds(265, 145, 159, 36);
 		contentPane.add(btnEditarEspecialidade);
 		table.getColumnModel().getColumn(0).setPreferredWidth(399);

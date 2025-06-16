@@ -7,7 +7,11 @@ public class Consulta {
 	private Medico medico;
 	private Paciente paciente;
 	
-	public Consulta() {}
+	public Consulta() {
+		
+		this.medico = new Medico();
+		this.paciente = new Paciente();
+	}
 	
 	public Consulta(String horaConsulta, Medico medico, Paciente paciente) {
 		this.horaConsulta = horaConsulta;

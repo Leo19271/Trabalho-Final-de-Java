@@ -11,6 +11,8 @@ public class Paciente {
 	private Endereco endereco;
 
 	public Paciente() {
+		
+		this.endereco = new Endereco();
 	}
 
 	public Paciente(String nome, String dataNascimento, String sexo, String telefone, String formaPagamento,

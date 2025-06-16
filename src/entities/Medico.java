@@ -10,6 +10,9 @@ public class Medico {
 	private Especialidade especialidade;
 
 	public Medico() {
+		
+		this.especialidade = new Especialidade();
+		this.endereco = new Endereco();
 	}
 
 	public Medico(String crm, String nome, String telefone, Endereco endereco, Especialidade especialidade) {

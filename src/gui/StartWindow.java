@@ -79,6 +79,14 @@ public class StartWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
+	private void abrirTipoExame() {
+		
+		TipoExameWindow tipoExameWindow = new TipoExameWindow(this);
+		tipoExameWindow.setVisible(true);
+		
+		this.setVisible(false);
+	}
+	
 	private void inicializarComponentes() {
 		
 		setTitle("Aplicativo para Clínicas");
@@ -158,6 +166,12 @@ public class StartWindow extends JFrame {
 		contentPane.add(btnEspecialidades);
 		
 		JButton btnTipoExame = new JButton("Tipos de Exame");
+		btnTipoExame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirTipoExame();
+			}
+		});
 		btnTipoExame.setBounds(394, 150, 154, 34);
 		contentPane.add(btnTipoExame);
 		

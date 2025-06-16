@@ -26,7 +26,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class CadastrarMedicoWindow extends JFrame {
+public class EditarMedicoWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -37,15 +37,10 @@ public class CadastrarMedicoWindow extends JFrame {
 	private JTextField txtEstado;
 	private JTextField txtCidade;
 	private JTextField txtBairro;
-	private JTextField txtRua;
+	private JTextField textField;
 	private MedicosWindow medicoWindow;
-	private JTextField txtNum;
-	private JFormattedTextField formattedTelefone;
-	private JFormattedTextField formattedCRM;
-	private JFormattedTextField formattedCEP;
-	private JComboBox Especialidade;
 	
-	public CadastrarMedicoWindow(MedicosWindow medicoWindow) {
+	public EditarMedicoWindow(MedicosWindow medicoWindow) {
 		
 		this.criarMascaraCrm();
 		this.criarMascaraTelefone();
@@ -86,24 +81,9 @@ public class CadastrarMedicoWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
-	private void limparComponentes() {
-		
-		this.txtNome.setText("");
-		this.txtEstado.setText("");
-		this.txtCidade.setText("");
-		this.txtBairro.setText("");
-		this.txtNum.setText("");
-		this.txtRua.setText("");
-		this.formattedCEP.setText("");
-		this.formattedCRM.setText("");
-		this.formattedTelefone.setText("");
-		this.Especialidade.setSelectedIndex(0);
-		
-	}
-	
 	private void initComponents() {
 		
-		setTitle("Cadastrar Médico");
+		setTitle("Editar informações do Médico");
 		setResizable(false);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -126,7 +106,7 @@ public class CadastrarMedicoWindow extends JFrame {
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
 		
-		formattedCRM = new JFormattedTextField(mascaraCrm);
+		JFormattedTextField formattedCRM = new JFormattedTextField(mascaraCrm);
 		formattedCRM.setForeground(new Color(0, 0, 0));
 		formattedCRM.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		formattedCRM.setBounds(28, 69, 107, 20);
@@ -142,13 +122,13 @@ public class CadastrarMedicoWindow extends JFrame {
 		lblTelefone.setBounds(177, 53, 97, 14);
 		contentPane.add(lblTelefone);
 		
-		formattedTelefone = new JFormattedTextField(mascaraTelefone);
+		JFormattedTextField formattedTelefone = new JFormattedTextField(mascaraTelefone);
 		formattedTelefone.setForeground(Color.BLACK);
 		formattedTelefone.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		formattedTelefone.setBounds(177, 69, 115, 20);
 		contentPane.add(formattedTelefone);
 		
-		Especialidade = new JComboBox();
+		JComboBox Especialidade = new JComboBox();
 		Especialidade.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		Especialidade.setBounds(327, 68, 177, 22);
 		contentPane.add(Especialidade);
@@ -162,7 +142,7 @@ public class CadastrarMedicoWindow extends JFrame {
 		lblCEP.setBounds(28, 133, 27, 14);
 		contentPane.add(lblCEP);
 		
-		formattedCEP = new JFormattedTextField(mascaraCep);
+		JFormattedTextField formattedCEP = new JFormattedTextField(mascaraCep);
 		formattedCEP.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		formattedCEP.setBounds(63, 131, 72, 20);
 		contentPane.add(formattedCEP);
@@ -205,16 +185,20 @@ public class CadastrarMedicoWindow extends JFrame {
 		lblRua.setBounds(195, 172, 53, 14);
 		contentPane.add(lblRua);
 		
-		txtRua = new JTextField();
-		txtRua.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		txtRua.setColumns(10);
-		txtRua.setBounds(226, 169, 278, 20);
-		contentPane.add(txtRua);
+		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		textField.setColumns(10);
+		textField.setBounds(226, 169, 278, 20);
+		contentPane.add(textField);
 		
 		JLabel lblNumero = new JLabel("Numero:");
 		lblNumero.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblNumero.setBounds(28, 206, 53, 14);
 		contentPane.add(lblNumero);
+		
+		JSpinner spinner = new JSpinner();
+		spinner.setBounds(83, 204, 72, 20);
+		contentPane.add(spinner);
 		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(10, 247, 494, 2);
@@ -225,27 +209,15 @@ public class CadastrarMedicoWindow extends JFrame {
 		lblEspecialidade.setBounds(327, 53, 85, 14);
 		contentPane.add(lblEspecialidade);
 		
-		JButton btnLimparCampos = new JButton("Limpar Campos");
-		btnLimparCampos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				limparComponentes();
-			}
-		});
-		
+		JButton btnLimparCampos = new JButton("Reiniciar Informações");
 		btnLimparCampos.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btnLimparCampos.setBounds(226, 260, 128, 40);
+		btnLimparCampos.setBounds(172, 260, 161, 40);
 		contentPane.add(btnLimparCampos);
 		
-		JButton btnCadastrar = new JButton("Cadastrar");
+		JButton btnCadastrar = new JButton("Confirmar Edição");
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		btnCadastrar.setBounds(376, 260, 128, 40);
+		btnCadastrar.setBounds(343, 260, 161, 40);
 		contentPane.add(btnCadastrar);
-		
-		txtNum = new JTextField();
-		txtNum.setBounds(83, 204, 52, 20);
-		contentPane.add(txtNum);
-		txtNum.setColumns(10);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

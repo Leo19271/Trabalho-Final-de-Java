@@ -73,6 +73,14 @@ public class PacientesWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
+	private void iniciarEditarPaciente() {
+		
+		EditarPacienteWindow editarPacienteWindow = new EditarPacienteWindow(this);
+		editarPacienteWindow.setVisible(true);
+		
+		this.setVisible(false);
+	}
+	
 	private void initComponents() {
 		
 		
@@ -144,9 +152,16 @@ public class PacientesWindow extends JFrame {
 		BtnCadastrarPaciente.setBounds(358, 252, 154, 46);
 		contentPane_1.add(BtnCadastrarPaciente);
 		
-		JButton btnEditarPaciente = new JButton("Editar Paciente");
-		btnEditarPaciente.setBounds(194, 252, 154, 46);
-		contentPane_1.add(btnEditarPaciente);
+		JButton BtnEditarPaciente = new JButton("Editar Paciente");
+		BtnEditarPaciente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				iniciarEditarPaciente();
+			}
+		});
+		
+		BtnEditarPaciente.setBounds(194, 252, 154, 46);
+		contentPane_1.add(BtnEditarPaciente);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 36, 513, 205);

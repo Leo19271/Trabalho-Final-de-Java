@@ -68,4 +68,41 @@ public class EnderecoDAO {
 			BancoDados.desconectar();
 		}
 	}
+	
+	public Endereco buscarPorId(int Id) throws SQLException {
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+
+			st = conn.prepareStatement("select * from endereco where idEndereco = ?");
+
+			st.setInt(1, Id);
+
+			rs = st.executeQuery();
+
+			if (rs.next()) {
+
+				Endereco endereco = new Endereco();
+				
+				endereco.setEstado(rs.getString("estado"));
+				endereco.setCidade(rs.getString("cidade"));
+				endereco.setBairro(rs.getString("bairro"));
+				endereco.setRua(rs.getString("rua"));
+				endereco.setNumero(rs.getInt("numero"));
+				endereco.setCep(rs.getString("cep"));
+			
+				return endereco;
+			}
+
+			return null;
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
 }

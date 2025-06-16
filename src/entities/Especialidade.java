@@ -2,7 +2,7 @@ package entities;
 
 public class Especialidade {
 
-	private int id;
+	private int idEspecialidade;
 	private String nome;
 
 	public Especialidade() {
@@ -21,12 +21,12 @@ public class Especialidade {
 		this.nome = nome;
 	}
 
-	public int getId() {
-		return id;
+	public int getIdEspecialidade() {
+		return idEspecialidade;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setIdEspecialidade(int idEspecialidade) {
+		this.idEspecialidade = idEspecialidade;
 	}
 	
 }

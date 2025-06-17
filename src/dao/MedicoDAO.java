@@ -134,7 +134,7 @@ public class MedicoDAO {
 		
 		try {
 
-			st = conn.prepareStatement("select * from medico where nome LIKE ?");
+			st = conn.prepareStatement("select * from medico where nome LIKE ? order by nome");
 
 			st.setString(1, "%" + nome + "%");
 
@@ -173,7 +173,7 @@ public class MedicoDAO {
 		
 		try {
 
-			st = conn.prepareStatement("select * from medico where numeroCRM = ?");
+			st = conn.prepareStatement("select * from medico where numeroCRM = ? order by nome");
 
 			st.setString(1, crm);
 

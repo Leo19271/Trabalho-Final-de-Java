@@ -3,6 +3,8 @@ package gui;
 import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -101,12 +103,88 @@ public class EspecialidadesWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
-	private void abrirEditarEspecialidade() {
+	private void abrirEditarEspecialidade(Especialidade especialidade) {
 		
-		EditarEspecialidadeWindow editarEspecialidadeWindow = new EditarEspecialidadeWindow(this);
+		EditarEspecialidadeWindow editarEspecialidadeWindow = new EditarEspecialidadeWindow(this, especialidade);
 		editarEspecialidadeWindow.setVisible(true);
 		
 		this.setVisible(false);
+	}
+	
+	private Especialidade buscarEspecialidadePorNome(String nome) {
+		
+		try {
+			
+			return especialidadeService.buscarPorNome(nome);
+			
+		} catch (Exception e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao apagar a especialidade.", "Erro", JOptionPane.WARNING_MESSAGE);
+		}
+		
+		return null;
+	}
+	
+	private void editarEspecialidade() {
+		
+		int selectedRow = tblEspecialidades.getSelectedRow();
+
+		if(selectedRow >= 0) {
+			try {
+
+				Especialidade especialidade = buscarEspecialidadePorNome((String)(tblEspecialidades.getValueAt(selectedRow, 0)));
+			    	
+				this.abrirEditarEspecialidade(especialidade);
+				
+			}catch(Exception e) {
+				
+				JOptionPane.showMessageDialog(null, "Erro ao editar a especialidade.", "Erro", JOptionPane.WARNING_MESSAGE);
+
+			}
+			
+		}else {
+			
+			JOptionPane.showMessageDialog(null, "Selecione uma especialidade na tabela para Editar.", "Nenhuma especialidade selecionado", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+	private void apagarEspecialidade() {
+		
+		int selectedRow = tblEspecialidades.getSelectedRow();
+
+		if(selectedRow >= 0) {
+			try {
+				
+				int opcao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja apagar essa especialidade?", "Confirmação", JOptionPane.YES_NO_CANCEL_OPTION);
+
+			    if (opcao == JOptionPane.YES_OPTION) {
+
+			    	JOptionPane.showMessageDialog(null, "Escolha confirmada!");
+			        
+					Especialidade especialidade = buscarEspecialidadePorNome((String)(tblEspecialidades.getValueAt(selectedRow, 0)));
+			    	
+			    	especialidadeService.excluir(especialidade);
+			    	
+			    	this.buscarEspecialidades();
+			        
+			    } else if (opcao == JOptionPane.NO_OPTION) {
+
+			        	JOptionPane.showMessageDialog(null, "Escolha não confirmada.");
+			    } else {
+			    	
+			    	   JOptionPane.showMessageDialog(null, "Operação cancelada.");
+			    }
+				
+			}catch(Exception e) {
+				
+				JOptionPane.showMessageDialog(null, "Erro ao apagar a especialidade.", "Erro", JOptionPane.WARNING_MESSAGE);
+
+			}
+			
+		}else {
+			
+			JOptionPane.showMessageDialog(null, "Selecione uma especialidade na tabela para Apagar.", "Nenhuma especialidade selecionada", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 	
 	private void initComponents() {
@@ -149,11 +227,21 @@ public class EspecialidadesWindow extends JFrame {
 		btnEditarEspecialidade.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				abrirEditarEspecialidade();
+				editarEspecialidade();
 			}
 		});
 		btnEditarEspecialidade.setBounds(265, 145, 159, 36);
 		contentPane.add(btnEditarEspecialidade);
+		
+		JButton btnApagarEspecialidade = new JButton("Apagar Especialidade");
+		btnApagarEspecialidade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				apagarEspecialidade();
+			}
+		});
+		btnApagarEspecialidade.setBounds(265, 98, 159, 36);
+		contentPane.add(btnApagarEspecialidade);
 		tblEspecialidades.getColumnModel().getColumn(0).setPreferredWidth(399);
 		
 		JMenuBar menuBar = new JMenuBar();

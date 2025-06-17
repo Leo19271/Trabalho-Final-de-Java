@@ -38,6 +38,26 @@ public class EspecialidadeDAO {
 		}
 	}
 	
+	public synchronized void editar(Especialidade especialidade) throws SQLException {
+		
+		PreparedStatement st = null;
+
+		try {
+
+			st = conn.prepareStatement("update especialidade set nome = ? where idEspecialidade = ?");
+
+			st.setString(1, especialidade.getNome());
+			st.setInt(2, especialidade.getIdEspecialidade());
+
+			st.executeUpdate();
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
+		}
+	}
+	
 	public synchronized int excluir(int idEspecialidade) throws SQLException {
 
 		PreparedStatement st = null;
@@ -100,6 +120,39 @@ public class EspecialidadeDAO {
 			st = conn.prepareStatement("select * from especialidade where idEspecialidade = ?");
 
 			st.setInt(1, Id);
+
+			rs = st.executeQuery();
+
+			if (rs.next()) {
+
+				Especialidade especialidade = new Especialidade();
+				
+				especialidade.setIdEspecialidade(rs.getInt("idEspecialidade"));
+				especialidade.setNome(rs.getString("nome"));
+
+				return especialidade;
+			}
+
+			return null;
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
+	
+	public Especialidade buscarPorNome(String nome) throws SQLException {
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+
+			st = conn.prepareStatement("select * from especialidade where nome = ?");
+
+			st.setString(1, nome);
 
 			rs = st.executeQuery();
 

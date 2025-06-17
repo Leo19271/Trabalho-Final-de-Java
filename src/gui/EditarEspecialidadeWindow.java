@@ -9,10 +9,15 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import entities.Especialidade;
+import service.EspecialidadeService;
+
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -22,10 +27,18 @@ public class EditarEspecialidadeWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private EspecialidadesWindow especialidadesWindow;
-	private JTextField textField;
+	private JTextField txtEspecialidade;
+	private Especialidade especialidade;
+	private EspecialidadeService especialidadeService;
 	
-	public EditarEspecialidadeWindow(EspecialidadesWindow especialidadesWindow) {
+	public EditarEspecialidadeWindow(EspecialidadesWindow especialidadesWindow, Especialidade especialidade) {
+		
+		this.especialidade = especialidade;
+		this.especialidadeService = new EspecialidadeService();
+		
 		this.initComponents();
+
+		this.carregarComponents();
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -42,6 +55,8 @@ public class EditarEspecialidadeWindow extends JFrame {
 		this.dispose();
 		this.especialidadesWindow.setVisible(true);
 		
+		this.especialidadesWindow.buscarEspecialidades();
+		
 	}
 	
 	private void finalizarAplicacao() {
@@ -55,6 +70,28 @@ public class EditarEspecialidadeWindow extends JFrame {
 		sobreWindow.setVisible(true);
 		
 		this.setVisible(false);
+	}
+	
+	private void carregarComponents() {
+		
+		this.txtEspecialidade.setText(this.especialidade.getNome());
+	}
+	
+	private void editarEspecialidade() {
+		
+		try {
+			
+			this.especialidade.setNome(this.txtEspecialidade.getText());
+		
+			especialidadeService.editar(especialidade);
+			
+			fecharJanela();
+			
+		}catch(Exception e){
+			
+			JOptionPane.showMessageDialog(null, "Erro ao editar especialidade na base de dados.", "Erro Editar Especialidades", JOptionPane.ERROR_MESSAGE);
+		}
+		
 	}
 
 	private void initComponents() {
@@ -74,16 +111,28 @@ public class EditarEspecialidadeWindow extends JFrame {
 		lblNomeEspecialidade.setBounds(30, 31, 165, 14);
 		contentPane.add(lblNomeEspecialidade);
 		
-		textField = new JTextField();
-		textField.setBounds(175, 28, 165, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtEspecialidade = new JTextField();
+		txtEspecialidade.setBounds(175, 28, 165, 20);
+		contentPane.add(txtEspecialidade);
+		txtEspecialidade.setColumns(10);
 		
 		JButton btnCadastrar = new JButton("Editar especialidade");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				editarEspecialidade();
+			}
+		});
 		btnCadastrar.setBounds(193, 73, 147, 48);
 		contentPane.add(btnCadastrar);
 		
 		JButton btnLimparCampo = new JButton("Reiniciar Informações");
+		btnLimparCampo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				carregarComponents();
+			}
+		});
 		btnLimparCampo.setBounds(30, 73, 147, 48);
 		contentPane.add(btnLimparCampo);
 		

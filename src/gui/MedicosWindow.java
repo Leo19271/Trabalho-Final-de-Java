@@ -188,8 +188,11 @@ public class MedicosWindow extends JFrame {
 			    if (opcao == JOptionPane.YES_OPTION) {
 
 			    	JOptionPane.showMessageDialog(null, "Escolha confirmada!");
-			        	
-			        apagarMedico();
+			    	
+					Medico medico = buscarMedicoPorCrm((String)(tblMedicos.getValueAt(selectedRow, 1)));
+					medicoService.excluirMedico(medico);
+					this.buscarMedicos();
+			    	
 			    } else if (opcao == JOptionPane.NO_OPTION) {
 
 			        	JOptionPane.showMessageDialog(null, "Escolha não confirmada.");
@@ -198,9 +201,6 @@ public class MedicosWindow extends JFrame {
 			    	   JOptionPane.showMessageDialog(null, "Operação cancelada.");
 			    }
 			    
-				Medico medico = buscarMedicoPorCrm((String)(tblMedicos.getValueAt(selectedRow, 1)));
-				medicoService.excluirMedico(medico);
-				this.buscarMedicos();
 			}catch(Exception e) {
 				
 				JOptionPane.showMessageDialog(null, "Erro ao apagar o médico.", "Erro", JOptionPane.WARNING_MESSAGE);

@@ -16,7 +16,7 @@ public class EnderecoDAO {
 		this.conn = conn;
 	}
 
-	public int cadastrar(Endereco endereco) throws SQLException {
+	public synchronized int cadastrar(Endereco endereco) throws SQLException {
 
 		PreparedStatement st = null;
 		
@@ -50,7 +50,7 @@ public class EnderecoDAO {
 		return 0;
 	}
 	
-	public void editarEndereco(Endereco endereco) throws SQLException {
+	public synchronized void editarEndereco(Endereco endereco) throws SQLException {
 		
 		PreparedStatement st = null;
 
@@ -75,7 +75,7 @@ public class EnderecoDAO {
 		}
 	}
 	
-	public int excluir(int idEndereco) throws SQLException {
+	public synchronized int excluir(int idEndereco) throws SQLException {
 
 		PreparedStatement st = null;
 

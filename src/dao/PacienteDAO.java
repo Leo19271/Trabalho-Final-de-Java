@@ -16,7 +16,7 @@ public class PacienteDAO {
 		this.conn = conn;
 	}
 
-	public int cadastrar(Paciente paciente) throws SQLException {
+	public synchronized int cadastrar(Paciente paciente) throws SQLException {
 
 		PreparedStatement st = null;
 		
@@ -45,7 +45,7 @@ public class PacienteDAO {
 		}
 	}
 	
-	public int excluir(int idPaciente) throws SQLException {
+	public synchronized int excluir(int idPaciente) throws SQLException {
 
 		PreparedStatement st = null;
 

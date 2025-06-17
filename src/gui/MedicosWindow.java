@@ -163,25 +163,6 @@ public class MedicosWindow extends JFrame {
 		
 	}
 	
-	private void confirmacaoMedico() {
-		int opcao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja apagar esse médico?", "Confirmação", JOptionPane.YES_NO_CANCEL_OPTION);
-
-	    if (opcao == JOptionPane.YES_OPTION) {
-
-	    	JOptionPane.showMessageDialog(null, "Escolha confirmada!");
-	        	
-	        apagarMedico();
-	    } else if (opcao == JOptionPane.NO_OPTION) {
-
-	        	JOptionPane.showMessageDialog(null, "Escolha não confirmada.");
-	    } else {
-	    	
-	    	   JOptionPane.showMessageDialog(null, "Operação cancelada.");
-	    }
-		
-
-	}
-	
 	private void editarMedico() {
 		
 		int selectedRow = tblMedicos.getSelectedRow();
@@ -201,6 +182,22 @@ public class MedicosWindow extends JFrame {
 
 		if(selectedRow >= 0) {
 			try {
+				
+				int opcao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja apagar esse médico?", "Confirmação", JOptionPane.YES_NO_CANCEL_OPTION);
+
+			    if (opcao == JOptionPane.YES_OPTION) {
+
+			    	JOptionPane.showMessageDialog(null, "Escolha confirmada!");
+			        	
+			        apagarMedico();
+			    } else if (opcao == JOptionPane.NO_OPTION) {
+
+			        	JOptionPane.showMessageDialog(null, "Escolha não confirmada.");
+			    } else {
+			    	
+			    	   JOptionPane.showMessageDialog(null, "Operação cancelada.");
+			    }
+			    
 				Medico medico = buscarMedicoPorCrm((String)(tblMedicos.getValueAt(selectedRow, 1)));
 				medicoService.excluirMedico(medico);
 				this.buscarMedicos();
@@ -294,7 +291,7 @@ public class MedicosWindow extends JFrame {
 		BtnApagarMedico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				confirmacaoMedico();
+				apagarMedico();
 			}
 		});
 		BtnApagarMedico.setBounds(30, 252, 154, 46);

@@ -18,7 +18,7 @@ public class EspecialidadeDAO {
 		this.conn = conn;
 	}
 
-	public int cadastrar(Especialidade especialidade) throws SQLException {
+	public synchronized int cadastrar(Especialidade especialidade) throws SQLException {
 
 		PreparedStatement st = null;
 
@@ -38,7 +38,7 @@ public class EspecialidadeDAO {
 		}
 	}
 	
-	public int excluir(int idEspecialidade) throws SQLException {
+	public synchronized int excluir(int idEspecialidade) throws SQLException {
 
 		PreparedStatement st = null;
 

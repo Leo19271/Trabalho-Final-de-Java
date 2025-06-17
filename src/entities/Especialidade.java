@@ -29,5 +29,7 @@ public class Especialidade {
 		this.idEspecialidade = idEspecialidade;
 	}
 	
+	public String toString() {
+	    return this.nome;
+	}
 }
-

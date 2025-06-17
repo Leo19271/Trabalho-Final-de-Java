@@ -17,6 +17,22 @@ public class MedicoService {
 		
 	}
 	
+	public void cadastrarMedico(Medico medico)  throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		new MedicoDAO(conn).cadastrar(medico);
+	}
+	
+	public void editarMedicoPorId(Medico medico) throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		new MedicoDAO(conn).editarMedicoPorId(medico);
+
+		EnderecoService enderecoService = new EnderecoService();
+		
+		enderecoService.EditarEndereco(medico.getEndereco());
+	}
+	
 	public List<Medico> buscarTodos() throws SQLException, IOException {
 		
 		Connection conn = BancoDados.conectar();
@@ -69,10 +85,10 @@ public class MedicoService {
 		
 		Endereco endereco = enderecoService.buscarPorId(medico.getEndereco().getIdEndereco());
 		medico.setEndereco(endereco);
-			
-		Especialidade especialidade = especialidadeService.buscarPorId(medico.getEspecialidade().getIdEspecialidade());
-		medico.setEspecialidade(especialidade);
 		
+		Especialidade especialidade = especialidadeService.buscarPorId(medico.getEspecialidade().getIdEspecialidade());
+		medico.setEspecialidade(especialidade);		
+
 		return medico;
 	}
 }

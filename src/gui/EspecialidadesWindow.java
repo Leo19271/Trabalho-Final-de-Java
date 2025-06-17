@@ -3,15 +3,22 @@ package gui;
 import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import entities.Especialidade;
+import entities.Medico;
+import service.EspecialidadeService;
+
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -21,13 +28,17 @@ public class EspecialidadesWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table;
+	private JTable tblEspecialidades;
 	private StartWindow startWindow;
+	private EspecialidadeService especialidadeService;
 	
 	public EspecialidadesWindow(StartWindow startWindow) {
 
+		this.especialidadeService = new EspecialidadeService();
+		
 		this.initComponents();
 		
+		this.buscarEspecialidades();
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -57,6 +68,29 @@ public class EspecialidadesWindow extends JFrame {
 		sobreWindow.setVisible(true);
 		
 		this.setVisible(false);
+	}
+	
+	protected void buscarEspecialidades() {
+		
+		try {
+			
+			DefaultTableModel modelo = (DefaultTableModel) tblEspecialidades.getModel();
+			modelo.fireTableDataChanged();
+			modelo.setRowCount(0);
+	
+			List<Especialidade> Especialidades = especialidadeService.buscarTodos();
+	
+			for (Especialidade especialidade : Especialidades) {
+	
+				modelo.addRow(new Object[] { 
+					especialidade.getNome()
+				});
+			}
+		
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Especialidades da base de dados.", "Erro Buscar Especialidades", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void abrirCadastrarEspecialidade() {
@@ -91,9 +125,9 @@ public class EspecialidadesWindow extends JFrame {
 		scrollPane.setBounds(10, 11, 248, 217);
 		contentPane.add(scrollPane);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(
+		tblEspecialidades = new JTable();
+		scrollPane.setViewportView(tblEspecialidades);
+		tblEspecialidades.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -120,7 +154,7 @@ public class EspecialidadesWindow extends JFrame {
 		});
 		btnEditarEspecialidade.setBounds(265, 145, 159, 36);
 		contentPane.add(btnEditarEspecialidade);
-		table.getColumnModel().getColumn(0).setPreferredWidth(399);
+		tblEspecialidades.getColumnModel().getColumn(0).setPreferredWidth(399);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

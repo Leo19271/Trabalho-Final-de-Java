@@ -6,14 +6,22 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
+
+import entities.Especialidade;
+import entities.Medico;
+import service.EspecialidadeService;
+import service.MedicoService;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.swing.JTextField;
 import javax.swing.JFormattedTextField;
@@ -43,16 +51,23 @@ public class CadastrarMedicoWindow extends JFrame {
 	private JFormattedTextField formattedTelefone;
 	private JFormattedTextField formattedCRM;
 	private JFormattedTextField formattedCEP;
-	private JComboBox Especialidade;
+	private JComboBox cbEspecialidade;
+	private MedicoService medicoService;
+	private EspecialidadeService especialidadeService;
 	
 	public CadastrarMedicoWindow(MedicosWindow medicoWindow) {
+		
+		this.medicoService = new MedicoService();
+		this.especialidadeService = new EspecialidadeService();
 		
 		this.criarMascaraCrm();
 		this.criarMascaraTelefone();
 		this.criarMascaraCep();
 		
+		
 		this.initComponents();
 		
+		this.buscarEspecialidades();
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -86,6 +101,22 @@ public class CadastrarMedicoWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
+	private void buscarEspecialidades() {
+		
+		List<Especialidade> listaEspecialidades;
+		try {
+			listaEspecialidades = this.especialidadeService.buscarTodos();
+			
+			for(Especialidade especialidade : listaEspecialidades) {
+				
+				this.cbEspecialidade.addItem(especialidade);
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Especialidades da base de dados.", "Erro Buscar Especialidades", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	private void limparComponentes() {
 		
 		this.txtNome.setText("");
@@ -97,8 +128,35 @@ public class CadastrarMedicoWindow extends JFrame {
 		this.formattedCEP.setText("");
 		this.formattedCRM.setText("");
 		this.formattedTelefone.setText("");
-		this.Especialidade.setSelectedIndex(0);
+		this.cbEspecialidade.setSelectedIndex(0);
 		
+	}
+	
+	private void cadastrarMedico() {
+		
+		Medico medico = new Medico();
+		try {
+			medico.setNome(this.txtNome.getText());
+			medico.setCrm(this.formattedCRM.getText());
+			medico.setTelefone(this.formattedTelefone.getText());
+			medico.setEspecialidade((Especialidade)this.cbEspecialidade.getSelectedItem());
+			medico.getEndereco().setCep(this.formattedCEP.getText());
+			medico.getEndereco().setCidade(this.txtCidade.getText());
+			medico.getEndereco().setBairro(this.txtBairro.getText());
+			medico.getEndereco().setEstado(this.txtEstado.getText());
+			medico.getEndereco().setRua(this.txtRua.getText());
+			medico.getEndereco().setNumero(this.txtNum.getText());
+			
+			this.medicoService.cadastrarMedico(medico);
+		
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao cadastrar Medico na base de dados.", "Erro Cadastrar Medico", JOptionPane.ERROR_MESSAGE);
+		}finally {
+			
+			this.medicoWindow.buscarMedicos();
+		}
 	}
 	
 	private void initComponents() {
@@ -148,10 +206,10 @@ public class CadastrarMedicoWindow extends JFrame {
 		formattedTelefone.setBounds(177, 69, 115, 20);
 		contentPane.add(formattedTelefone);
 		
-		Especialidade = new JComboBox();
-		Especialidade.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		Especialidade.setBounds(327, 68, 177, 22);
-		contentPane.add(Especialidade);
+		cbEspecialidade = new JComboBox();
+		cbEspecialidade.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		cbEspecialidade.setBounds(327, 68, 177, 22);
+		contentPane.add(cbEspecialidade);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBounds(10, 118, 494, 2);
@@ -238,6 +296,13 @@ public class CadastrarMedicoWindow extends JFrame {
 		contentPane.add(btnLimparCampos);
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				cadastrarMedico();
+				fecharJanela();
+			}
+		});
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		btnCadastrar.setBounds(376, 260, 128, 40);
 		contentPane.add(btnCadastrar);

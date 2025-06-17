@@ -99,7 +99,7 @@ public class MedicosWindow extends JFrame {
 		
 	}
 	
-	private void buscarMedicos() {
+	protected void buscarMedicos() {
 		
 		try {
 			
@@ -233,6 +233,7 @@ public class MedicosWindow extends JFrame {
 				int selectedRow = tblMedicos.getSelectedRow();
 				
 				if(selectedRow >= 0) {
+					
 					Medico medico = buscarMedicoPorCrm((String)(tblMedicos.getValueAt(selectedRow, 1)));
 					abrirEditarMedico(medico);
 				}else {

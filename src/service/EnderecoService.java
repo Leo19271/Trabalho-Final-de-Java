@@ -20,4 +20,10 @@ public class EnderecoService {
 		return new EnderecoDAO(conn).buscarPorId(id);
 		
 	}
+	
+	public void EditarEndereco(Endereco endereco) throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		new EnderecoDAO(conn).editarEndereco(endereco);
+	}
 }

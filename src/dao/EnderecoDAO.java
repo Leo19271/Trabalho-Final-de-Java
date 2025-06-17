@@ -31,7 +31,7 @@ public class EnderecoDAO {
 			st.setString(2, endereco.getCidade());
 			st.setString(3, endereco.getBairro());
 			st.setString(4, endereco.getRua());
-			st.setInt(5, endereco.getNumero());
+			st.setString(5, endereco.getNumero());
 			st.setString(6, endereco.getCep());
 		
 			st.executeUpdate();
@@ -48,6 +48,31 @@ public class EnderecoDAO {
 			BancoDados.finalizarResultSet(rs);
 		}
 		return 0;
+	}
+	
+	public void editarEndereco(Endereco endereco) throws SQLException {
+		
+		PreparedStatement st = null;
+
+		try {
+
+			st = conn.prepareStatement("update endereco set estado = ?, cidade = ?, bairro = ?, rua = ?, numero = ?, cep = ? where idEndereco = ?");
+
+			st.setString(1, endereco.getEstado());
+			st.setString(2, endereco.getCidade());
+			st.setString(3, endereco.getBairro());
+			st.setString(4, endereco.getRua());
+			st.setString(5, endereco.getNumero());
+			st.setString(6, endereco.getCep());
+			st.setInt(7, endereco.getIdEndereco());
+			
+			st.executeUpdate();
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
+		}
 	}
 	
 	public int excluir(int idEndereco) throws SQLException {
@@ -86,11 +111,12 @@ public class EnderecoDAO {
 
 				Endereco endereco = new Endereco();
 				
+				endereco.setIdEndereco(rs.getInt("idEndereco"));
 				endereco.setEstado(rs.getString("estado"));
 				endereco.setCidade(rs.getString("cidade"));
 				endereco.setBairro(rs.getString("bairro"));
 				endereco.setRua(rs.getString("rua"));
-				endereco.setNumero(rs.getInt("numero"));
+				endereco.setNumero(rs.getString("numero"));
 				endereco.setCep(rs.getString("cep"));
 			
 				return endereco;

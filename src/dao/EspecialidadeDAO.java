@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import entities.Especialidade;
 
@@ -55,6 +57,39 @@ public class EspecialidadeDAO {
 		}
 	}
 	
+	public List<Especialidade> buscarTodos() throws SQLException{
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+
+			st = conn.prepareStatement("select * from especialidade order by idEspecialidade");
+
+			rs = st.executeQuery();
+
+			List<Especialidade> listaEspecialidades = new ArrayList<>();
+			
+			while (rs.next()) {
+
+				Especialidade especialidade = new Especialidade();
+				
+				especialidade.setIdEspecialidade(rs.getInt("idEspecialidade"));
+				especialidade.setNome(rs.getString("nome"));
+				
+				listaEspecialidades.add(especialidade);
+			}
+
+			return listaEspecialidades;
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
+	
 	public Especialidade buscarPorId(int Id) throws SQLException {
 
 		PreparedStatement st = null;
@@ -72,6 +107,7 @@ public class EspecialidadeDAO {
 
 				Especialidade especialidade = new Especialidade();
 				
+				especialidade.setIdEspecialidade(rs.getInt("idEspecialidade"));
 				especialidade.setNome(rs.getString("nome"));
 
 				return especialidade;

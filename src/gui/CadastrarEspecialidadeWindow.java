@@ -5,14 +5,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import entities.Especialidade;
+import service.EspecialidadeService;
+
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -23,8 +30,12 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 	private JPanel contentPane;
 	private EspecialidadesWindow especialidadesWindow;
 	private JTextField txtEspecialidade;
+	private EspecialidadeService especialidadeService;
 	
 	public CadastrarEspecialidadeWindow(EspecialidadesWindow especialidadesWindow) {
+		
+		this.especialidadeService = new EspecialidadeService();
+				
 		this.initComponents();
 		
 		addWindowListener(new WindowAdapter() {
@@ -65,6 +76,21 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 			
 	}
 	
+	private void cadastrarEspecialidade() {
+		
+		Especialidade especialidade = new Especialidade();
+		
+		especialidade.setNome(this.txtEspecialidade.getText());
+		try {
+			
+			this.especialidadeService.cadastrar(especialidade);
+			
+		} catch (Exception e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao cadastrar Especialidade na base de dados.", "Erro cadastrar Especialidade", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	private void initComponents() {
 		
 		setTitle("Cadastrar Especialidade");
@@ -88,6 +114,15 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 		txtEspecialidade.setColumns(10);
 		
 		JButton btnCadastrar = new JButton("Cadastrar especialidade");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				cadastrarEspecialidade();
+				fecharJanela();
+				especialidadesWindow.buscarEspecialidades();
+
+			}
+		});
 		btnCadastrar.setBounds(193, 73, 147, 48);
 		contentPane.add(btnCadastrar);
 		

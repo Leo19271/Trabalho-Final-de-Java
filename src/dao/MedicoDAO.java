@@ -34,16 +34,41 @@ public class MedicoDAO {
 			st.setString(2, medico.getCrm());
 			st.setString(3, medico.getTelefone());
 			st.setInt(4, idEndereco);
-			st.setInt(5, 1);
+			st.setInt(5, medico.getEspecialidade().getIdEspecialidade());
 			
 
 			return st.executeUpdate();
+			
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.desconectar();
+		}
+	}
+	
+	public void editarMedicoPorId(Medico medico) throws SQLException {
+		
+		PreparedStatement st = null;
+
+		try {
+
+			st = conn.prepareStatement("update medico set nome = ?, numeroCRM = ?, telefone = ?, idEndereco = ?, idEspecialidade = ? where idMedico = ?");
+
+			st.setString(1, medico.getNome());
+			st.setString(2, medico.getCrm());
+			st.setString(3, medico.getTelefone());
+			st.setInt(4, medico.getEndereco().getIdEndereco());
+			st.setInt(5, medico.getEspecialidade().getIdEspecialidade());
+			st.setDouble(6, medico.getId());
+
+			st.executeUpdate();
 
 		} finally {
 
 			BancoDados.finalizarStatement(st);
 			BancoDados.desconectar();
 		}
+		
 	}
 	
 	public int excluir(int idMedico) throws SQLException {
@@ -82,15 +107,13 @@ public class MedicoDAO {
 
 				Medico medico = new Medico();
 				
+				medico.setId(rs.getInt("idMedico"));
 				medico.setNome(rs.getString("nome"));
 				medico.setCrm(rs.getString("numeroCRM"));
 				medico.setTelefone(rs.getString("telefone"));
 				medico.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
 				medico.getEspecialidade().setIdEspecialidade(rs.getInt("idEspecialidade"));
-				
-				//medico.setEndereco(new EnderecoDAO(conn).buscarPorId(rs.getInt("idEndereco")));
-				//medico.setEspecialidade(new EspecialidadeDAO(conn).buscarPorId(rs.getInt("idEspecialidade")));
-				
+							
 				listaMedicos.add(medico);
 			}
 
@@ -119,7 +142,7 @@ public class MedicoDAO {
 			
 			List<Medico> listaMedicos = new ArrayList<>();
 
-			if (rs.next()) {
+			while (rs.next()) {
 
 				Medico medico = new Medico();
 				
@@ -132,7 +155,7 @@ public class MedicoDAO {
 				listaMedicos.add(medico);
 
 			}
-
+			
 			return listaMedicos;
 
 		} finally {
@@ -160,6 +183,7 @@ public class MedicoDAO {
 
 				Medico medico = new Medico();
 				
+				medico.setId(rs.getInt("idMedico"));
 				medico.setNome(rs.getString("nome"));
 				medico.setCrm(rs.getString("numeroCRM"));
 				medico.setTelefone(rs.getString("telefone"));

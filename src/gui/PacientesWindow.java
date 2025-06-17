@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
@@ -21,6 +23,10 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import entities.Paciente;
+import service.PacienteService;
+
 import javax.swing.JScrollPane;
 
 public class PacientesWindow extends JFrame {
@@ -29,11 +35,17 @@ public class PacientesWindow extends JFrame {
 	private JPanel contentPane;
 	private JPanel contentPane_1;
 	private StartWindow startWindow;
-	private JTextField textField;
-	private JTable table;
+	private JTextField txtNome;
+	private JTable tblPacientes;
+	private PacienteService pacienteService;
 	
 	public PacientesWindow(StartWindow startWindow) {
+		
+		this.pacienteService = new PacienteService();
+		
 		this.initComponents();
+		
+		this.buscarPacientes();
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -43,6 +55,32 @@ public class PacientesWindow extends JFrame {
 			}
 		});
 		this.startWindow = startWindow;
+	}
+	
+protected void buscarPacientes() {
+		
+		try {
+			
+			DefaultTableModel modelo = (DefaultTableModel) tblPacientes.getModel();
+			modelo.fireTableDataChanged();
+			modelo.setRowCount(0);
+
+			List<Paciente> pacientes = pacienteService.buscarTodos();
+	
+			for (Paciente paciente : pacientes) {
+	
+				modelo.addRow(new Object[] { 
+					paciente.getNome(), 
+					paciente.getDataNascimento(),
+					paciente.getTelefone(),
+					paciente.getFormaPagamento()
+				});
+			}
+		
+		} catch (Exception e) {
+
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Medicos da base de dados.", "Erro Buscar Medicos", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void fecharJanela() {
@@ -132,10 +170,10 @@ public class PacientesWindow extends JFrame {
 		lblNomePaciente.setBounds(10, 11, 98, 14);
 		contentPane_1.add(lblNomePaciente);
 		
-		textField = new JTextField();
-		textField.setBounds(105, 8, 307, 20);
-		contentPane_1.add(textField);
-		textField.setColumns(10);
+		txtNome = new JTextField();
+		txtNome.setBounds(105, 8, 307, 20);
+		contentPane_1.add(txtNome);
+		txtNome.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar\r\n");
 		btnBuscar.setBounds(422, 7, 89, 23);
@@ -167,19 +205,19 @@ public class PacientesWindow extends JFrame {
 		scrollPane.setBounds(10, 36, 513, 205);
 		contentPane_1.add(scrollPane);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(
+		tblPacientes = new JTable();
+		scrollPane.setViewportView(tblPacientes);
+		tblPacientes.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
 				"Nome", "Data de Nascimento", "Telefone", "Forma de Pagamento"
 			}
 		));
-		table.getColumnModel().getColumn(0).setPreferredWidth(232);
-		table.getColumnModel().getColumn(1).setPreferredWidth(153);
-		table.getColumnModel().getColumn(2).setPreferredWidth(112);
-		table.getColumnModel().getColumn(3).setPreferredWidth(124);
+		tblPacientes.getColumnModel().getColumn(0).setPreferredWidth(232);
+		tblPacientes.getColumnModel().getColumn(1).setPreferredWidth(153);
+		tblPacientes.getColumnModel().getColumn(2).setPreferredWidth(112);
+		tblPacientes.getColumnModel().getColumn(3).setPreferredWidth(124);
 		
 		setLocationRelativeTo(null);
 	}

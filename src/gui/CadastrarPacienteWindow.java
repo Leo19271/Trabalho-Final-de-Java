@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -17,12 +19,17 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
+
+import entities.Paciente;
+import service.PacienteService;
+
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
@@ -49,12 +56,16 @@ public class CadastrarPacienteWindow extends JFrame {
 	private JFormattedTextField formattedTelefone;
 	private JFormattedTextField formattedCEP;
 	private JFormattedTextField formattedDataNascimento;
+	private PacienteService pacienteService;
 	
 	public CadastrarPacienteWindow(PacientesWindow pacientesWindow) {
+		
+		this.pacienteService = new PacienteService();
 		
 		this.criarMascaraDataNascimento();
 		this.criarMascaraTelefone();
 		this.criarMascaraCep();
+		
 		this.BGSEXO = new ButtonGroup();
 		
 		this.initComponents();
@@ -77,6 +88,7 @@ public class CadastrarPacienteWindow extends JFrame {
 		this.dispose();
 		this.pacientesWindow.setVisible(true);
 		
+		pacientesWindow.buscarPacientes();
 	}
 	
 	private void finalizarAplicacao() {
@@ -105,6 +117,52 @@ public class CadastrarPacienteWindow extends JFrame {
 		this.formattedDataNascimento.setText("");
 		this.txtFormaPagamento.setText("");
 		this.rdbtnMasculino.setSelected(true);
+	}
+	
+	private void cadastrarPaciente() {
+		
+		try {
+		
+			Paciente paciente = new Paciente();
+			
+			paciente.setNome(this.txtNome.getText());
+			paciente.setDataNascimento(corrigirData().toString());
+			paciente.setSexo(this.escolhaSexoPaciente());
+			paciente.setTelefone(this.formattedTelefone.getText());
+			paciente.setFormaPagamento(this.txtFormaPagamento.getText());
+			paciente.getEndereco().setCep(this.formattedCEP.getText());
+			paciente.getEndereco().setEstado(this.txtEstado.getText());
+			paciente.getEndereco().setCidade(this.txtCidade.getText());
+			paciente.getEndereco().setBairro(this.txtBairro.getText());
+			paciente.getEndereco().setRua(this.txtRua.getText());
+			paciente.getEndereco().setNumero(this.txtNum.getText());
+			
+			this.pacienteService.cadastrar(paciente);
+			
+			fecharJanela();
+		} catch(Exception e){
+			
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao cadastrar Paciente na base de dados.", "Erro Cadastrar Paciente", JOptionPane.ERROR_MESSAGE);
+
+		}
+		
+	}
+	
+	private LocalDate corrigirData() {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return LocalDate.parse(this.formattedDataNascimento.getText(), formatter);
+	}
+	
+	private String escolhaSexoPaciente() {
+		
+		if (this.rdbtnMasculino.isSelected()) {
+			return this.rdbtnMasculino.getText();
+		} else if (this.rdbtnFeminino.isSelected()) {
+			return this.rdbtnFeminino.getText();
+		}
+		return null;
 	}
 	
 	private void initComponents() {
@@ -232,6 +290,12 @@ public class CadastrarPacienteWindow extends JFrame {
 		contentPane.add(btnLimparCampos);
 		
 		JButton btnCadastrar = new JButton("Cadastrar");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				cadastrarPaciente();
+			}
+		});
 		btnCadastrar.setBounds(415, 283, 128, 40);
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(btnCadastrar);

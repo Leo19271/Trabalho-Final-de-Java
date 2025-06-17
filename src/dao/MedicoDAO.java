@@ -24,16 +24,13 @@ public class MedicoDAO {
 
 		try {
 			
-			EnderecoDAO enderecoDAO = new EnderecoDAO(conn);
-			int idEndereco = enderecoDAO.cadastrar(medico.getEndereco());
-			
 			st = conn.prepareStatement(
 					"insert into medico (nome, numeroCRM, telefone, idEndereco, idEspecialidade) values (?, ?, ?, ?, ?)");
 
 			st.setString(1, medico.getNome());
 			st.setString(2, medico.getCrm());
 			st.setString(3, medico.getTelefone());
-			st.setInt(4, idEndereco);
+			st.setInt(4, medico.getEndereco().getIdEndereco());
 			st.setInt(5, medico.getEspecialidade().getIdEspecialidade());
 			
 
@@ -46,7 +43,7 @@ public class MedicoDAO {
 		}
 	}
 	
-	public synchronized void editarMedicoPorId(Medico medico) throws SQLException {
+	public synchronized void editarMedico(Medico medico) throws SQLException {
 		
 		PreparedStatement st = null;
 
@@ -59,7 +56,7 @@ public class MedicoDAO {
 			st.setString(3, medico.getTelefone());
 			st.setInt(4, medico.getEndereco().getIdEndereco());
 			st.setInt(5, medico.getEspecialidade().getIdEspecialidade());
-			st.setDouble(6, medico.getId());
+			st.setInt(6, medico.getId());
 
 			st.executeUpdate();
 

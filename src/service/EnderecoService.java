@@ -14,6 +14,13 @@ public class EnderecoService {
 		
 	}
 	
+	public int cadastrar(Endereco endereco)  throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		return new EnderecoDAO(conn).cadastrar(endereco);
+
+	}
+	
 	public Endereco buscarPorId(int id) throws SQLException, IOException {
 		
 		Connection conn = BancoDados.conectar();

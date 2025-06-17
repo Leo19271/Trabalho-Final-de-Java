@@ -171,7 +171,7 @@ public class EditarMedicoWindow extends JFrame {
 			
 			System.out.println();
 			
-			this.medicoService.editarMedicoPorId(medico);
+			this.medicoService.editarMedico(medico);
 		
 			
 		}catch(Exception e) {

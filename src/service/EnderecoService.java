@@ -21,9 +21,15 @@ public class EnderecoService {
 		
 	}
 	
-	public void EditarEndereco(Endereco endereco) throws SQLException, IOException {
+	public void editarEndereco(Endereco endereco) throws SQLException, IOException {
 		
 		Connection conn = BancoDados.conectar();
 		new EnderecoDAO(conn).editarEndereco(endereco);
+	}
+	
+	public void excluirEndereco(int id) throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		new EnderecoDAO(conn).excluir(id);
 	}
 }

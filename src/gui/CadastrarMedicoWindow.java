@@ -159,6 +159,18 @@ public class CadastrarMedicoWindow extends JFrame {
 		}
 	}
 	
+	private void verificarCampos() {
+		
+		if(this.txtNome.getText().equals("")) {
+			
+			JOptionPane.showMessageDialog(null, "Preencha todos os campos", "Erro Cadastrar Medico", JOptionPane.ERROR_MESSAGE);
+		}else {
+			
+			cadastrarMedico();
+			fecharJanela();
+		}
+	}
+	
 	private void initComponents() {
 		
 		setTitle("Cadastrar Médico");
@@ -299,8 +311,7 @@ public class CadastrarMedicoWindow extends JFrame {
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				cadastrarMedico();
-				fecharJanela();
+				verificarCampos();
 			}
 		});
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));

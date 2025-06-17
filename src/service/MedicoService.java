@@ -23,6 +23,16 @@ public class MedicoService {
 		new MedicoDAO(conn).cadastrar(medico);
 	}
 	
+	public void excluirMedico(Medico medico) throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		new MedicoDAO(conn).excluir(medico.getId());
+		
+		EnderecoService enderecoService = new EnderecoService();
+		
+		enderecoService.excluirEndereco(medico.getEndereco().getIdEndereco());
+	}
+	
 	public void editarMedicoPorId(Medico medico) throws SQLException, IOException {
 		
 		Connection conn = BancoDados.conectar();
@@ -30,7 +40,7 @@ public class MedicoService {
 
 		EnderecoService enderecoService = new EnderecoService();
 		
-		enderecoService.EditarEndereco(medico.getEndereco());
+		enderecoService.editarEndereco(medico.getEndereco());
 	}
 	
 	public List<Medico> buscarTodos() throws SQLException, IOException {

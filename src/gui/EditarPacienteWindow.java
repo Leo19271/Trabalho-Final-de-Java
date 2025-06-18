@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -17,12 +19,17 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
+
+import entities.Paciente;
+import service.PacienteService;
+
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
@@ -39,14 +46,23 @@ public class EditarPacienteWindow extends JFrame {
 	private JTextField txtEstado;
 	private JTextField txtCidade;
 	private JTextField txtBairro;
-	private JTextField textField;
+	private JTextField txtRua;
 	private PacientesWindow pacientesWindow;
-	private JTextField textField_1;
+	private JTextField txtFormaPagamento;
 	private ButtonGroup BGSEXO;
 	private JRadioButton rdbtnMasculino;
 	private JRadioButton rdbtnFeminino;
+	private Paciente paciente;
+	private JTextField txtNum;
+	private JFormattedTextField formattedDataNascimento;
+	private JFormattedTextField formattedCEP;
+	private JFormattedTextField formattedTelefone;
+	private PacienteService pacienteService;
 	
-	public EditarPacienteWindow(PacientesWindow pacientesWindow) {
+	public EditarPacienteWindow(PacientesWindow pacientesWindow, Paciente paciente) {
+		
+		this.pacienteService = new PacienteService();
+		this.paciente = paciente;
 		
 		this.criarMascaraDataNascimento();
 		this.criarMascaraTelefone();
@@ -54,7 +70,7 @@ public class EditarPacienteWindow extends JFrame {
 		this.BGSEXO = new ButtonGroup();
 		
 		this.initComponents();
-		
+		this.popularComponents();
 		
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -73,6 +89,8 @@ public class EditarPacienteWindow extends JFrame {
 		this.dispose();
 		this.pacientesWindow.setVisible(true);
 		
+		pacientesWindow.buscarPacientes();
+		
 	}
 	
 	private void finalizarAplicacao() {
@@ -86,6 +104,78 @@ public class EditarPacienteWindow extends JFrame {
 		sobreWindow.setVisible(true);
 		
 		this.setVisible(false);
+	}
+	
+	private void popularComponents() {
+
+		this.txtNome.setText(paciente.getNome());
+		this.txtCidade.setText(paciente.getEndereco().getCidade());
+		this.txtEstado.setText(paciente.getEndereco().getEstado());
+		this.txtBairro.setText(paciente.getEndereco().getBairro());
+		this.txtFormaPagamento.setText(paciente.getFormaPagamento());
+		this.txtRua.setText(paciente.getEndereco().getRua());
+		this.formattedCEP.setText(paciente.getEndereco().getCep());
+		this.formattedDataNascimento.setText(paciente.getDataNascimento());
+		this.formattedTelefone.setText(paciente.getTelefone());
+		this.txtNum.setText(paciente.getEndereco().getNumero());
+		this.popularSexo();
+		
+	}
+	
+	private void popularSexo() {
+		
+		if(paciente.getSexo().equals("Masculino")) {
+			
+			rdbtnMasculino.setSelected(true);
+		}else {
+			
+			rdbtnFeminino.setSelected(true);
+		}
+	}
+	
+	private LocalDate corrigirData() {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return LocalDate.parse(this.formattedDataNascimento.getText(), formatter);
+	}
+	
+	private String escolhaSexoPaciente() {
+		
+		if (this.rdbtnMasculino.isSelected()) {
+			return this.rdbtnMasculino.getText();
+		} else if (this.rdbtnFeminino.isSelected()) {
+			return this.rdbtnFeminino.getText();
+		}
+		return null;
+	}
+	
+	private void confirmarEdicao() {
+		
+		paciente.setNome(this.txtNome.getText());
+		paciente.setDataNascimento(corrigirData().toString());
+		paciente.setSexo(this.escolhaSexoPaciente());
+		paciente.setTelefone(this.formattedTelefone.getText());
+		paciente.setFormaPagamento(this.txtFormaPagamento.getText());
+		paciente.getEndereco().setCep(this.formattedCEP.getText());
+		paciente.getEndereco().setEstado(this.txtEstado.getText());
+		paciente.getEndereco().setCidade(this.txtCidade.getText());
+		paciente.getEndereco().setBairro(this.txtBairro.getText());
+		paciente.getEndereco().setRua(this.txtRua.getText());
+		paciente.getEndereco().setNumero(this.txtNum.getText());
+		
+		try {
+			
+			pacienteService.editar(paciente);
+			
+	    	JOptionPane.showMessageDialog(null, "Paciente editado com sucesso!");
+	    	
+			fecharJanela();
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao editar Paciente na base de dados.", "Erro Editar Paciente", JOptionPane.ERROR_MESSAGE);
+
+		}
 	}
 	
 	private void initComponents() {
@@ -112,7 +202,7 @@ public class EditarPacienteWindow extends JFrame {
 		contentPane.add(txtNome);
 		txtNome.setColumns(10);
 		
-		JFormattedTextField formattedDataNascimento = new JFormattedTextField(mascaraDataNascimento);
+		formattedDataNascimento = new JFormattedTextField(mascaraDataNascimento);
 		formattedDataNascimento.setBounds(28, 69, 107, 20);
 		formattedDataNascimento.setForeground(new Color(0, 0, 0));
 		formattedDataNascimento.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -128,7 +218,7 @@ public class EditarPacienteWindow extends JFrame {
 		lblTelefone.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblTelefone);
 		
-		JFormattedTextField formattedTelefone = new JFormattedTextField(mascaraTelefone);
+		formattedTelefone = new JFormattedTextField(mascaraTelefone);
 		formattedTelefone.setBounds(154, 69, 115, 20);
 		formattedTelefone.setForeground(Color.BLACK);
 		formattedTelefone.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -143,7 +233,7 @@ public class EditarPacienteWindow extends JFrame {
 		lblCEP.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblCEP);
 		
-		JFormattedTextField formattedCEP = new JFormattedTextField(mascaraCep);
+		formattedCEP = new JFormattedTextField(mascaraCep);
 		formattedCEP.setBounds(63, 165, 72, 20);
 		formattedCEP.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(formattedCEP);
@@ -186,31 +276,39 @@ public class EditarPacienteWindow extends JFrame {
 		lblRua.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblRua);
 		
-		textField = new JTextField();
-		textField.setBounds(234, 196, 278, 20);
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		textField.setColumns(10);
-		contentPane.add(textField);
+		txtRua = new JTextField();
+		txtRua.setBounds(234, 196, 278, 20);
+		txtRua.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtRua.setColumns(10);
+		contentPane.add(txtRua);
 		
 		JLabel lblNumero = new JLabel("Numero:");
 		lblNumero.setBounds(28, 230, 53, 14);
 		lblNumero.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(lblNumero);
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setBounds(83, 228, 72, 20);
-		contentPane.add(spinner);
-		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(10, 270, 533, 2);
 		contentPane.add(separator_1);
 		
 		JButton btnLimparCampos = new JButton("Reiniciar Informações");
+		btnLimparCampos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				popularComponents();
+			}
+		});
 		btnLimparCampos.setBounds(212, 283, 161, 40);
 		btnLimparCampos.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(btnLimparCampos);
 		
 		JButton btnCadastrar = new JButton("Confirmar Edição\r\n");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				confirmarEdicao();
+			}
+		});
 		btnCadastrar.setBounds(382, 283, 161, 40);
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		contentPane.add(btnCadastrar);
@@ -242,10 +340,15 @@ public class EditarPacienteWindow extends JFrame {
 		lblFormaPagamento.setBounds(28, 101, 142, 14);
 		contentPane.add(lblFormaPagamento);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(28, 121, 224, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		txtFormaPagamento = new JTextField();
+		txtFormaPagamento.setBounds(28, 121, 224, 20);
+		contentPane.add(txtFormaPagamento);
+		txtFormaPagamento.setColumns(10);
+		
+		txtNum = new JTextField();
+		txtNum.setBounds(83, 228, 86, 20);
+		contentPane.add(txtNum);
+		txtNum.setColumns(10);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

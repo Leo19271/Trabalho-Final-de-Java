@@ -148,8 +148,10 @@ public class CadastrarMedicoWindow extends JFrame {
 			medico.getEndereco().setNumero(this.txtNum.getText());
 			
 			this.medicoService.cadastrarMedico(medico);
-		
+	    	JOptionPane.showMessageDialog(null, "Medico cadastrado com sucesso!");
 			
+	    	fecharJanela();
+	    	
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 			JOptionPane.showMessageDialog(null, "Erro ao cadastrar Medico na base de dados.", "Erro Cadastrar Medico", JOptionPane.ERROR_MESSAGE);
@@ -167,7 +169,6 @@ public class CadastrarMedicoWindow extends JFrame {
 		}else {
 			
 			cadastrarMedico();
-			fecharJanela();
 		}
 	}
 	

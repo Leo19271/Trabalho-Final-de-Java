@@ -172,7 +172,9 @@ public class EditarMedicoWindow extends JFrame {
 			System.out.println();
 			
 			this.medicoService.editarMedico(medico);
-		
+	    	JOptionPane.showMessageDialog(null, "Medico modificado com sucesso!");
+	    	
+			fecharJanela();
 			
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -323,7 +325,6 @@ public class EditarMedicoWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				editarInformacoes();
-				fecharJanela();
 			}
 		});
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 13));

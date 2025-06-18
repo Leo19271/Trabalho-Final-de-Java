@@ -187,7 +187,7 @@ public class MedicosWindow extends JFrame {
 
 			    if (opcao == JOptionPane.YES_OPTION) {
 
-			    	JOptionPane.showMessageDialog(null, "Escolha confirmada!");
+			    	JOptionPane.showMessageDialog(null, "Medico deletado com sucesso!");
 			    	
 					Medico medico = buscarMedicoPorCrm((String)(tblMedicos.getValueAt(selectedRow, 1)));
 					medicoService.excluirMedico(medico);

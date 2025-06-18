@@ -59,5 +59,34 @@ public void excluirPaciente(Paciente paciente) throws SQLException, IOException 
 		Connection conn = BancoDados.conectar();
 		new PacienteDAO(conn).editarPaciente(paciente);
 	}
+
+	public List<Paciente> listarPacientesPorNome(String nome) throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		return new PacienteDAO(conn).listarPacientesPorNome(nome);
+	}
+
+	public Paciente procurarPacientePorNome(String nome) throws SQLException, IOException {
+		
+		EnderecoService enderecoService = new EnderecoService();
+
+		
+		Connection conn = BancoDados.conectar();
+		Paciente paciente = new PacienteDAO(conn).procurarPacientePorNome(nome);
+		
+		Endereco endereco = enderecoService.buscarPorId(paciente.getEndereco().getIdEndereco());
+		paciente.setEndereco(endereco);
+		
+		return paciente;
+	}
 	
+	public void editar(Paciente paciente) throws SQLException, IOException {
+		
+		EnderecoService enderecoService = new EnderecoService();
+		
+		enderecoService.editarEndereco(paciente.getEndereco());
+		
+		Connection conn = BancoDados.conectar();
+		new PacienteDAO(conn).editarPaciente(paciente);
+	}
 }

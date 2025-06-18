@@ -55,6 +55,7 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 		this.dispose();
 		this.especialidadesWindow.setVisible(true);
 		
+		especialidadesWindow.buscarEspecialidades();
 	}
 	
 	private void finalizarAplicacao() {
@@ -84,6 +85,10 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 		try {
 			
 			this.especialidadeService.cadastrar(especialidade);
+			
+	    	JOptionPane.showMessageDialog(null, "Especialidade cadastrada com sucesso!");
+	    	
+			fecharJanela();
 			
 		} catch (Exception e) {
 			
@@ -118,8 +123,6 @@ public class CadastrarEspecialidadeWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				cadastrarEspecialidade();
-				fecharJanela();
-				especialidadesWindow.buscarEspecialidades();
 
 			}
 		});

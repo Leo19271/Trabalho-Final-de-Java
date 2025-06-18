@@ -143,6 +143,7 @@ public class MedicoDAO {
 
 				Medico medico = new Medico();
 				
+				medico.setId(rs.getInt("idMedico"));
 				medico.setNome(rs.getString("nome"));
 				medico.setCrm(rs.getString("numeroCRM"));
 				medico.setTelefone(rs.getString("telefone"));

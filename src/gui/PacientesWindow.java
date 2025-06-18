@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
@@ -24,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import entities.Paciente;
 import entities.Paciente;
 import service.PacienteService;
 
@@ -71,7 +74,7 @@ protected void buscarPacientes() {
 	
 				modelo.addRow(new Object[] { 
 					paciente.getNome(), 
-					paciente.getDataNascimento(),
+					converterData(paciente.getDataNascimento()),
 					paciente.getTelefone(),
 					paciente.getFormaPagamento()
 				});
@@ -79,7 +82,7 @@ protected void buscarPacientes() {
 		
 		} catch (Exception e) {
 
-			JOptionPane.showMessageDialog(null, "Erro ao buscar Medicos da base de dados.", "Erro Buscar Medicos", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Pacientes da base de dados.", "Erro Buscar Pacientes", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -111,12 +114,111 @@ protected void buscarPacientes() {
 		this.setVisible(false);
 	}
 	
-	private void iniciarEditarPaciente() {
+	private void iniciarEditarPaciente(Paciente paciente) {
 		
-		EditarPacienteWindow editarPacienteWindow = new EditarPacienteWindow(this);
+		EditarPacienteWindow editarPacienteWindow = new EditarPacienteWindow(this, paciente);
 		editarPacienteWindow.setVisible(true);
 		
 		this.setVisible(false);
+	}
+	
+	private void ListarPacientesPorNome() {
+
+		try {
+			
+			DefaultTableModel modelo = (DefaultTableModel) tblPacientes.getModel();
+			modelo.fireTableDataChanged();
+			modelo.setRowCount(0);
+			
+			List<Paciente> pacientes = pacienteService.listarPacientesPorNome(this.txtNome.getText());
+			
+			for (Paciente paciente : pacientes) {
+				
+				modelo.addRow(new Object[] { 
+					paciente.getNome(),
+					converterData(paciente.getDataNascimento()),
+					paciente.getTelefone(),
+					paciente.getFormaPagamento()
+				});
+			}
+		}catch(Exception e) {
+			
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Medicos da base de dados.", "Erro Buscar Medicos", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private String converterData(String dataOriginal) {
+	    LocalDate data = LocalDate.parse(dataOriginal);
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    return data.format(formatter);
+	}
+	
+	private Paciente buscarPacientePorNome(String nome) {
+		
+		try {
+			
+			return pacienteService.procurarPacientePorNome(nome);
+			
+		}catch(Exception e){
+			
+			JOptionPane.showMessageDialog(null, "Erro ao buscar Paciente da base de dados.", "Erro Buscar Paciente", JOptionPane.ERROR_MESSAGE);
+		}
+		return null;
+
+	}
+	
+	private void editarPaciente() {
+		
+		int selectedRow = tblPacientes.getSelectedRow();
+		
+		if(selectedRow >= 0) {
+			
+			Paciente paciente = buscarPacientePorNome((String)(tblPacientes.getValueAt(selectedRow, 0)));
+			
+			paciente.setDataNascimento(converterData(paciente.getDataNascimento()));
+			
+			iniciarEditarPaciente(paciente);
+			
+		}else {
+			JOptionPane.showMessageDialog(null, "Selecione um Paciente na tabela para editar.", "Nenhum Paciente selecionado", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+	
+	private void apagarPaciente() {
+		
+		int selectedRow = tblPacientes.getSelectedRow();
+
+		if(selectedRow >= 0) {
+			try {
+				
+				int opcao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja apagar esse Paciente?", "Confirmação", JOptionPane.YES_NO_CANCEL_OPTION);
+
+			    if (opcao == JOptionPane.YES_OPTION) {
+
+			    	JOptionPane.showMessageDialog(null, "Paciente deletado com sucesso!");
+			    	
+					Paciente paciente = buscarPacientePorNome((String)(tblPacientes.getValueAt(selectedRow, 0)));
+					pacienteService.excluirPaciente(paciente);
+					this.buscarPacientes();
+			    	
+			    } else if (opcao == JOptionPane.NO_OPTION) {
+
+			        	JOptionPane.showMessageDialog(null, "Escolha não confirmada.");
+			    } else {
+			    	
+			    	   JOptionPane.showMessageDialog(null, "Operação cancelada.");
+			    }
+			    
+			}catch(Exception e) {
+				
+				JOptionPane.showMessageDialog(null, "Erro ao apagar o paciente.", "Erro", JOptionPane.WARNING_MESSAGE);
+
+			}
+			
+		}else {
+			
+			JOptionPane.showMessageDialog(null, "Selecione um paciente na tabela para Apagar.", "Nenhum paciente selecionado", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 	
 	private void initComponents() {
@@ -176,6 +278,12 @@ protected void buscarPacientes() {
 		txtNome.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar\r\n");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				ListarPacientesPorNome();
+			}
+		});
 		btnBuscar.setBounds(422, 7, 89, 23);
 		contentPane_1.add(btnBuscar);
 		
@@ -194,7 +302,7 @@ protected void buscarPacientes() {
 		BtnEditarPaciente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				iniciarEditarPaciente();
+				editarPaciente();
 			}
 		});
 		
@@ -214,6 +322,16 @@ protected void buscarPacientes() {
 				"Nome", "Data de Nascimento", "Telefone", "Forma de Pagamento"
 			}
 		));
+		
+		JButton BtnApagarPaciente = new JButton("Apagar Paciente");
+		BtnApagarPaciente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				apagarPaciente();
+			}
+		});
+		BtnApagarPaciente.setBounds(30, 252, 154, 46);
+		contentPane_1.add(BtnApagarPaciente);
 		tblPacientes.getColumnModel().getColumn(0).setPreferredWidth(232);
 		tblPacientes.getColumnModel().getColumn(1).setPreferredWidth(153);
 		tblPacientes.getColumnModel().getColumn(2).setPreferredWidth(112);

@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -125,8 +126,10 @@ public class CadastrarPacienteWindow extends JFrame {
 		
 			Paciente paciente = new Paciente();
 			
+			String dataCorrigida = corrigirData().toString();
+			
 			paciente.setNome(this.txtNome.getText());
-			paciente.setDataNascimento(corrigirData().toString());
+			paciente.setDataNascimento(dataCorrigida);
 			paciente.setSexo(this.escolhaSexoPaciente());
 			paciente.setTelefone(this.formattedTelefone.getText());
 			paciente.setFormaPagamento(this.txtFormaPagamento.getText());
@@ -137,16 +140,43 @@ public class CadastrarPacienteWindow extends JFrame {
 			paciente.getEndereco().setRua(this.txtRua.getText());
 			paciente.getEndereco().setNumero(this.txtNum.getText());
 			
+			
+			
 			this.pacienteService.cadastrar(paciente);
 			
+	    	JOptionPane.showMessageDialog(null, "Paciente cadastrado com sucesso!");
+
 			fecharJanela();
-		} catch(Exception e){
+			
+		} catch(DateTimeParseException e) {
+			
+			JOptionPane.showMessageDialog(null, "Escreva uma data válida.", "Erro Cadastrar Paciente", JOptionPane.ERROR_MESSAGE);
+			
+		}catch(Exception e){
 			
 			System.out.println(e.getMessage());
 			JOptionPane.showMessageDialog(null, "Erro ao cadastrar Paciente na base de dados.", "Erro Cadastrar Paciente", JOptionPane.ERROR_MESSAGE);
 
 		}
 		
+	}
+	
+	private void verificarCampos() {
+		
+		if(this.txtNome.getText().equals("")) {
+			
+			JOptionPane.showMessageDialog(null, "Nome não pode ser nulo.", "Erro Cadastrar Paciente", JOptionPane.ERROR_MESSAGE);
+
+		}else if(this.formattedDataNascimento.getText().equals("  /  /    ")) {
+			
+			JOptionPane.showMessageDialog(null, "Data de nascimento não pode ser nula.", "Erro Cadastrar Paciente", JOptionPane.ERROR_MESSAGE);
+		}else if ((!this.rdbtnFeminino.isSelected() && !this.rdbtnMasculino.isSelected())) {
+			
+			JOptionPane.showMessageDialog(null, "Deve selecionar uma das sexualidades.", "Erro Cadastrar Paciente", JOptionPane.ERROR_MESSAGE);
+		}else {
+			
+			this.cadastrarPaciente();
+		}
 	}
 	
 	private LocalDate corrigirData() {
@@ -293,7 +323,7 @@ public class CadastrarPacienteWindow extends JFrame {
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				cadastrarPaciente();
+				verificarCampos();
 			}
 		});
 		btnCadastrar.setBounds(415, 283, 128, 40);

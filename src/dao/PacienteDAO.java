@@ -70,7 +70,7 @@ public class PacienteDAO {
 
 		try {
 
-			st = conn.prepareStatement("update paciente set nome = ?, dataNascimento = ?, sexo = ?, telefone = ?, formaPagamento = ?, idEndereco where idPaciente = ?");
+			st = conn.prepareStatement("update paciente set nome = ?, dataNascimento = ?, sexo = ?, telefone = ?, formaPagamento = ?, idEndereco = ? where idPaciente = ?");
 
 			st.setString(1, paciente.getNome());
 			st.setDate(2, Date.valueOf(paciente.getDataNascimento()));
@@ -119,6 +119,85 @@ public class PacienteDAO {
 			}
 
 			return listaPacientes;
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
+	
+	public List<Paciente> listarPacientesPorNome(String nome) throws SQLException{
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+
+			st = conn.prepareStatement("select * from paciente where nome LIKE ? order by nome");
+
+			st.setString(1, "%" + nome + "%");
+
+			rs = st.executeQuery();
+			
+			List<Paciente> listaPacientes = new ArrayList<>();
+
+			while (rs.next()) {
+
+				Paciente paciente = new Paciente();
+				
+				paciente.setId(rs.getInt("idPaciente"));
+				paciente.setNome(rs.getString("nome"));
+				paciente.setDataNascimento(rs.getString("dataNascimento"));
+				paciente.setSexo(rs.getString("sexo"));
+				paciente.setTelefone(rs.getString("telefone"));
+				paciente.setFormaPagamento(rs.getString("formaPagamento"));
+				paciente.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+				
+				listaPacientes.add(paciente);
+
+			}
+			
+			return listaPacientes;
+
+		} finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
+
+	public Paciente procurarPacientePorNome(String nome) throws SQLException {
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+
+			st = conn.prepareStatement("select * from paciente where nome = ? order by nome");
+
+			st.setString(1, nome);
+
+			rs = st.executeQuery();
+
+			if (rs.next()) {
+
+				Paciente paciente = new Paciente();
+				
+				paciente.setId(rs.getInt("idPaciente"));
+				paciente.setNome(rs.getString("nome"));
+				paciente.setDataNascimento(rs.getString("dataNascimento"));
+				paciente.setSexo(rs.getString("sexo"));
+				paciente.setTelefone(rs.getString("telefone"));
+				paciente.setFormaPagamento(rs.getString("formaPagamento"));
+				paciente.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+				
+				return paciente;
+			}
+
+			return null;
 
 		} finally {
 

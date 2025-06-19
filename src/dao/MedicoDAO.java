@@ -43,6 +43,37 @@ public class MedicoDAO {
 		}
 	}
 	
+    public Medico procurarMedicoPorNome(String nome) throws SQLException {
+    	
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        
+        try {
+            st = conn.prepareStatement("SELECT * FROM medico WHERE nome = ?");
+            st.setString(1, nome);
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                Medico medico = new Medico();
+
+                medico.setId(rs.getInt("idMedico"));
+                medico.setNome(rs.getString("nome"));
+                medico.setCrm(rs.getString("numeroCRM"));
+                medico.setTelefone(rs.getString("telefone"));
+                medico.getEspecialidade().setIdEspecialidade(rs.getInt("idEspecialidade"));
+                medico.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+
+                return medico;
+            }
+            return null;
+        } finally {
+            BancoDados.finalizarStatement(st);
+            BancoDados.finalizarResultSet(rs);
+            BancoDados.desconectar();
+        }
+    }
+ 
+    
 	public synchronized void editarMedico(Medico medico) throws SQLException {
 		
 		PreparedStatement st = null;

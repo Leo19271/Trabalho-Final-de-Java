@@ -3,6 +3,7 @@ package entities;
 public class Exame {
 
 	private int idExame;
+	private boolean realizado;
 	private String dataRealizacao;
 	private Paciente paciente;
 	private Medico medico;
@@ -59,5 +60,13 @@ public class Exame {
 
 	public void setTipoExame(TipoExame tipoExame) {
 		this.tipoExame = tipoExame;
+	}
+
+	public boolean isRealizado() {
+		return realizado;
+	}
+
+	public void setRealizado(boolean realizado) {
+		this.realizado = realizado;
 	}
 }

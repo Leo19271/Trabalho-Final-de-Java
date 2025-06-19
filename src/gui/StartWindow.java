@@ -79,12 +79,30 @@ public class StartWindow extends JFrame {
 		this.setVisible(false);
 	}
 	
+	private void abrirAgendarExame() {
+	    AgendarExameWindow agendarExameWindow = new AgendarExameWindow(this);
+	    agendarExameWindow.setVisible(true);
+	    
+	    this.setVisible(false);
+	}
+	
 	private void abrirTipoExame() {
 		
 		TipoExameWindow tipoExameWindow = new TipoExameWindow(this);
 		tipoExameWindow.setVisible(true);
 		
 		this.setVisible(false);
+	}
+	
+	private void abrirAgendarConsulta() {
+	    AgendarConsultaWindow agendarConsultaWindow = new AgendarConsultaWindow(this);
+	    agendarConsultaWindow.setVisible(true);
+
+	    this.setVisible(false);
+	}
+	
+	private void abrirCalendarioMedico() {
+		
 	}
 	
 	private void inicializarComponentes() {
@@ -148,10 +166,22 @@ public class StartWindow extends JFrame {
 		contentPane.add(btnMedicos);
 		
 		JButton btnAgendarExame = new JButton("Agendar Exame");
+		btnAgendarExame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirAgendarExame();
+			}
+		});
 		btnAgendarExame.setBounds(28, 150, 154, 34);
 		contentPane.add(btnAgendarExame);
 		
 		JButton btnAgendarConsulta = new JButton("Agendar Consulta");
+		btnAgendarConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirAgendarConsulta();
+			}
+		});
 		btnAgendarConsulta.setBounds(28, 101, 154, 34);
 		contentPane.add(btnAgendarConsulta);
 		
@@ -184,6 +214,12 @@ public class StartWindow extends JFrame {
 		contentPane.add(btnCadastrarConsulta_1);
 		
 		JButton btnCalendarioMedico = new JButton("Calendario do Médico");
+		btnCalendarioMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirCalendarioMedico();
+			}
+		});
 		btnCalendarioMedico.setBounds(192, 11, 192, 34);
 		contentPane.add(btnCalendarioMedico);
 		

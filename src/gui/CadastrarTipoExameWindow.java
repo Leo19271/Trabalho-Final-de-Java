@@ -20,6 +20,12 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JEditorPane;
 import javax.swing.text.NumberFormatter;
+
+import service.TipoExameService;
+import javax.swing.JOptionPane;
+
+import entities.TipoExame;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.JTextArea;
@@ -32,8 +38,12 @@ public class CadastrarTipoExameWindow extends JFrame {
 	private JTextField txtNomeExame;
 	private JFormattedTextField fTxtValorExame;
 	private JTextArea txtObsExame;
+	private TipoExameService tipoExameService;
 	
 	public CadastrarTipoExameWindow(TipoExameWindow tipoExameWindow) {
+		
+		this.tipoExameService = new TipoExameService();
+		
 		this.initComponents();
 		
 		addWindowListener(new WindowAdapter() {
@@ -64,6 +74,36 @@ public class CadastrarTipoExameWindow extends JFrame {
 		this.fTxtValorExame.setValue(0.0);
 		this.txtObsExame.setText("");
 
+	}
+	
+	private void cadastrarExame() {
+	    try {
+	        String nome = this.txtNomeExame.getText();
+	        String obs = this.txtObsExame.getText();
+
+	        String valorTexto = this.fTxtValorExame.getText().replaceAll("[^\\d,\\.]", "").replace(",", ".");
+	        double valor = Double.parseDouble(valorTexto);
+
+	        TipoExame tipoExame = new TipoExame();
+	        tipoExame.setNome(nome);
+	        tipoExame.setValor(valor);
+	        tipoExame.setOrientacoes(obs);
+
+	        tipoExameService.cadastrarTipoExame(tipoExame);
+
+	        JOptionPane.showMessageDialog(this, "Exame cadastrado com sucesso!");
+
+	        limparComponentes();
+
+	    } catch (NumberFormatException e) {
+	        JOptionPane.showMessageDialog(this, "Valor do exame inválido. Por favor, insira um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(this, "Erro ao cadastrar exame: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+	    }finally {
+	    	
+	    	tipoExameWindow.buscarTiposExame();
+	    	fecharJanela();
+	    }
 	}
 	
 	private void configurarCampoValor() {
@@ -109,6 +149,12 @@ public class CadastrarTipoExameWindow extends JFrame {
 		txtNomeExame.setColumns(10);
 		
 		JButton btnCadastrar = new JButton("Cadastrar exame");
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				cadastrarExame();
+			}
+		});
 		btnCadastrar.setBounds(281, 258, 147, 48);
 		contentPane.add(btnCadastrar);
 		

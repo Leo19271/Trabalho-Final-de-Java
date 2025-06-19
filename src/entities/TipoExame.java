@@ -48,5 +48,7 @@ public class TipoExame {
 		this.orientacoes = orientacoes;
 	}
 	
-	
+	public String toString() {
+	    return this.nome;
+	}
 }

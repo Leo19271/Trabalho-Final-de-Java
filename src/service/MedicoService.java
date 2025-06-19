@@ -68,6 +68,24 @@ public class MedicoService {
 		return medicos;
 	}
 	
+	public Medico procurarMedicoPorNome(String nome) throws SQLException, IOException {
+	    
+	    EnderecoService enderecoService = new EnderecoService();
+		EspecialidadeService especialidadeService = new EspecialidadeService();
+
+	    
+	    Connection conn = BancoDados.conectar();
+	    Medico medico = new MedicoDAO(conn).procurarMedicoPorNome(nome);
+	    
+	    Endereco endereco = enderecoService.buscarPorId(medico.getEndereco().getIdEndereco());
+	    medico.setEndereco(endereco);
+	    
+	    Especialidade especialidade = especialidadeService.buscarPorId(medico.getEspecialidade().getIdEspecialidade());
+		medico.setEspecialidade(especialidade);
+	    
+	    return medico;
+	}
+	
 	public List<Medico> buscarMedicosPorNome(String nome) throws SQLException, IOException {
 		
 		Connection conn = BancoDados.conectar();

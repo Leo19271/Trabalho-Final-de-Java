@@ -176,7 +176,7 @@ public class PacienteDAO {
 		
 		try {
 
-			st = conn.prepareStatement("select * from paciente where nome = ? order by nome");
+			st = conn.prepareStatement("select * from paciente where nome = ?");
 
 			st.setString(1, nome);
 

@@ -71,4 +71,7 @@ public class Medico {
 		this.id = id;
 	}
 	
+	public String toString() {
+	    return this.nome;
+	}
 }

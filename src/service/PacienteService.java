@@ -89,4 +89,9 @@ public void excluirPaciente(Paciente paciente) throws SQLException, IOException 
 		Connection conn = BancoDados.conectar();
 		new PacienteDAO(conn).editarPaciente(paciente);
 	}
+	
+    public Paciente buscarPorId(int idPaciente) throws SQLException, IOException {
+        Connection conn = BancoDados.conectar();
+        return new PacienteDAO(conn).buscarPorId(idPaciente);
+    }
 }

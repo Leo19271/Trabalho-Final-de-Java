@@ -20,6 +20,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.awt.GridBagConstraints;
 import java.awt.FlowLayout;
+import java.awt.Font;
+
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -41,8 +43,14 @@ public class PacientesWindow extends JFrame {
 	private JTextField txtNome;
 	private JTable tblPacientes;
 	private PacienteService pacienteService;
+	private boolean salvarThreadRodando;
+	private int segundos;
+	private JLabel lblSegundos;
 	
 	public PacientesWindow(StartWindow startWindow) {
+		
+		this.salvarThreadRodando = true;
+		this.segundos = 10;
 		
 		this.pacienteService = new PacienteService();
 		
@@ -58,6 +66,8 @@ public class PacientesWindow extends JFrame {
 			}
 		});
 		this.startWindow = startWindow;
+		
+		this.iniciarThread();
 	}
 	
 protected void buscarPacientes() {
@@ -91,7 +101,29 @@ protected void buscarPacientes() {
 		this.dispose();
 		this.startWindow.setVisible(true);
 		
+		this.salvarThreadRodando = false;
 	}
+	
+    private void iniciarThread() {
+    	
+        Thread atualizarThreadPacientes = new Thread(() -> {
+            while (salvarThreadRodando) {
+                try {
+                	for(int i = 0; i < 10; i++) {
+                		this.lblSegundos.setText("Atualizará em " + (String.valueOf(segundos) + "s"));
+                		Thread.sleep(1000);
+                		segundos--;
+                	}
+                	segundos = 10;
+                    this.buscarPacientes();  
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        atualizarThreadPacientes.start();
+    }
 	
 	private void finalizarAplicacao() {
 		
@@ -184,6 +216,27 @@ protected void buscarPacientes() {
 		}
 	}
 	
+	private void abrirCalendarioPaciente() {
+	    int selectedRow = tblPacientes.getSelectedRow();
+	    try {
+		    if (selectedRow >= 0) {
+		        String nomePaciente = (String) tblPacientes.getValueAt(selectedRow, 0);
+		        
+		        Paciente paciente = pacienteService.procurarPacientePorNome(nomePaciente);
+		        
+		        CalendarioPacienteWindow calendarioWindow = new CalendarioPacienteWindow(this, paciente);
+		        calendarioWindow.setVisible(true);
+		        this.setVisible(false);
+	
+		    } else {
+		        JOptionPane.showMessageDialog(null, "Selecione um paciente na tabela para visualizar o calendário.", "Nenhum paciente selecionado", JOptionPane.WARNING_MESSAGE);
+		    }
+	    }catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao abrir calendario paciente.", "Erro", JOptionPane.WARNING_MESSAGE);
+
+	    }
+	}
+	
 	private void apagarPaciente() {
 		
 		int selectedRow = tblPacientes.getSelectedRow();
@@ -228,12 +281,11 @@ protected void buscarPacientes() {
 		setResizable(false);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 578, 394);
+		setBounds(100, 100, 549, 437);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 549, 370);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -273,7 +325,7 @@ protected void buscarPacientes() {
 		contentPane_1.add(lblNomePaciente);
 		
 		txtNome = new JTextField();
-		txtNome.setBounds(105, 8, 307, 20);
+		txtNome.setBounds(105, 8, 175, 20);
 		contentPane_1.add(txtNome);
 		txtNome.setColumns(10);
 		
@@ -284,7 +336,7 @@ protected void buscarPacientes() {
 				ListarPacientesPorNome();
 			}
 		});
-		btnBuscar.setBounds(422, 7, 89, 23);
+		btnBuscar.setBounds(290, 7, 89, 23);
 		contentPane_1.add(btnBuscar);
 		
 		JButton BtnCadastrarPaciente = new JButton("Cadastrar Paciente");
@@ -332,10 +384,24 @@ protected void buscarPacientes() {
 		});
 		BtnApagarPaciente.setBounds(30, 252, 154, 46);
 		contentPane_1.add(BtnApagarPaciente);
+		
+		JButton BtnCalendarioPaciente = new JButton("Ver Calendario do Paciente");
+		BtnCalendarioPaciente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				abrirCalendarioPaciente();
+			}
+		});
+		BtnCalendarioPaciente.setBounds(105, 309, 334, 46);
+		contentPane_1.add(BtnCalendarioPaciente);
 		tblPacientes.getColumnModel().getColumn(0).setPreferredWidth(232);
 		tblPacientes.getColumnModel().getColumn(1).setPreferredWidth(153);
 		tblPacientes.getColumnModel().getColumn(2).setPreferredWidth(112);
 		tblPacientes.getColumnModel().getColumn(3).setPreferredWidth(124);
+		
+		lblSegundos = new JLabel("Atualizará em:");
+		lblSegundos.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblSegundos.setBounds(389, 11, 134, 14);
+		contentPane_1.add(lblSegundos);
 		
 		setLocationRelativeTo(null);
 	}

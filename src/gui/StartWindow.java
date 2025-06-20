@@ -101,10 +101,6 @@ public class StartWindow extends JFrame {
 	    this.setVisible(false);
 	}
 	
-	private void abrirCalendarioMedico() {
-		
-	}
-	
 	private void inicializarComponentes() {
 		
 		setTitle("Aplicativo para Clínicas");
@@ -152,7 +148,7 @@ public class StartWindow extends JFrame {
 				abrirPacientes();
 			}
 		});
-		btnPacientes.setBounds(28, 56, 154, 34);
+		btnPacientes.setBounds(28, 11, 154, 34);
 		contentPane.add(btnPacientes);
 		
 		JButton btnMedicos = new JButton("Medicos");
@@ -162,7 +158,7 @@ public class StartWindow extends JFrame {
 				abrirMedicos();
 			}
 		});
-		btnMedicos.setBounds(28, 11, 154, 34);
+		btnMedicos.setBounds(192, 11, 192, 34);
 		contentPane.add(btnMedicos);
 		
 		JButton btnAgendarExame = new JButton("Agendar Exame");
@@ -172,7 +168,7 @@ public class StartWindow extends JFrame {
 				abrirAgendarExame();
 			}
 		});
-		btnAgendarExame.setBounds(28, 150, 154, 34);
+		btnAgendarExame.setBounds(192, 56, 192, 34);
 		contentPane.add(btnAgendarExame);
 		
 		JButton btnAgendarConsulta = new JButton("Agendar Consulta");
@@ -182,7 +178,7 @@ public class StartWindow extends JFrame {
 				abrirAgendarConsulta();
 			}
 		});
-		btnAgendarConsulta.setBounds(28, 101, 154, 34);
+		btnAgendarConsulta.setBounds(28, 56, 154, 34);
 		contentPane.add(btnAgendarConsulta);
 		
 		JButton btnEspecialidades = new JButton("Especialidades");
@@ -202,30 +198,16 @@ public class StartWindow extends JFrame {
 				abrirTipoExame();
 			}
 		});
-		btnTipoExame.setBounds(394, 150, 154, 34);
+		btnTipoExame.setBounds(394, 56, 154, 34);
 		contentPane.add(btnTipoExame);
 		
 		JButton btnCalendarioConsulta = new JButton("Calendario de Consultas");
-		btnCalendarioConsulta.setBounds(192, 101, 192, 34);
+		btnCalendarioConsulta.setBounds(28, 101, 154, 34);
 		contentPane.add(btnCalendarioConsulta);
 		
 		JButton btnCadastrarConsulta_1 = new JButton("Calendario de Exames\r\n");
-		btnCadastrarConsulta_1.setBounds(192, 150, 192, 34);
+		btnCadastrarConsulta_1.setBounds(192, 101, 192, 34);
 		contentPane.add(btnCadastrarConsulta_1);
-		
-		JButton btnCalendarioMedico = new JButton("Calendario do Médico");
-		btnCalendarioMedico.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				abrirCalendarioMedico();
-			}
-		});
-		btnCalendarioMedico.setBounds(192, 11, 192, 34);
-		contentPane.add(btnCalendarioMedico);
-		
-		JButton btnCalendarioPaciente = new JButton("Calendario do Paciente");
-		btnCalendarioPaciente.setBounds(192, 56, 192, 34);
-		contentPane.add(btnCalendarioPaciente);
 		
 		setLocationRelativeTo(null);
 	}

@@ -30,6 +30,7 @@ import entities.Medico;
 import service.MedicoService;
 
 import javax.swing.JScrollPane;
+import java.awt.Font;
 
 public class MedicosWindow extends JFrame {
 
@@ -40,10 +41,14 @@ public class MedicosWindow extends JFrame {
 	private JTextField txtNomeMedico;
 	private JTable tblMedicos;
 	private MedicoService medicoService;
+	private boolean salvarThreadRodando;
+	private int segundos;
+	private JLabel lblSegundos;
 	
 	public MedicosWindow(StartWindow startWindow) {
 
-		
+		this.salvarThreadRodando = true;
+		this.segundos = 10;
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -58,6 +63,8 @@ public class MedicosWindow extends JFrame {
 		
 		this.startWindow = startWindow;
 		
+		this.iniciarThread();
+		
 		this.buscarMedicos();
 	}
 	
@@ -66,7 +73,30 @@ public class MedicosWindow extends JFrame {
 		this.dispose();
 		this.startWindow.setVisible(true);
 		
+		this.salvarThreadRodando = false;
 	}
+	
+    private void iniciarThread() {
+    	
+        Thread salvarThread = new Thread(() -> {
+            while (salvarThreadRodando) {
+                try {
+                	for(int i = 0; i < 10; i++) {
+                		this.lblSegundos.setText("Atualizará em " + (String.valueOf(segundos) + "s"));
+                		Thread.sleep(1000);
+                		segundos--;
+                	}
+                	segundos = 10;
+                    this.buscarMedicos();  
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        salvarThread.setDaemon(true);
+        salvarThread.start();
+    }
 	
 	private void finalizarAplicacao() {
 		
@@ -213,6 +243,29 @@ public class MedicosWindow extends JFrame {
 		}
 	}
 	
+	private void abrirWindowCalendario(Medico medico) {
+		
+        CalendarioMedicoWindow calendario = new CalendarioMedicoWindow(this, medico);
+        calendario.setVisible(true);
+        this.setVisible(false);
+	}
+	
+	private void abrirCalendarioMedico() {
+
+	    int selectedRow = tblMedicos.getSelectedRow();
+
+	    if(selectedRow >= 0) {
+
+	        String crmSelecionado = (String)(tblMedicos.getValueAt(selectedRow, 1));
+	        Medico medico = buscarMedicoPorCrm(crmSelecionado);
+
+	        abrirWindowCalendario(medico);
+
+	    } else {
+	        JOptionPane.showMessageDialog(null, "Selecione um médico na tabela para visualizar o calendário.", "Nenhum médico selecionado", JOptionPane.WARNING_MESSAGE);
+	    }
+	}
+	
 	private void initComponents() {
 		
 		
@@ -220,14 +273,13 @@ public class MedicosWindow extends JFrame {
 		setResizable(false);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 533, 355);
+		setBounds(100, 100, 569, 437);
 		
 		contentPane_1 = new JPanel();
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 549, 370);
 		
 		setContentPane(contentPane_1);
 		contentPane_1.setLayout(null);
@@ -237,7 +289,7 @@ public class MedicosWindow extends JFrame {
 		contentPane_1.add(lblNomeMedico);
 		
 		txtNomeMedico = new JTextField();
-		txtNomeMedico.setBounds(99, 8, 313, 20);
+		txtNomeMedico.setBounds(99, 8, 211, 20);
 		contentPane_1.add(txtNomeMedico);
 		txtNomeMedico.setColumns(10);
 		
@@ -248,7 +300,7 @@ public class MedicosWindow extends JFrame {
 				procurarMedicosPorNome();
 			}
 		});
-		btnBuscar.setBounds(422, 7, 89, 23);
+		btnBuscar.setBounds(320, 7, 89, 23);
 		contentPane_1.add(btnBuscar);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -296,6 +348,21 @@ public class MedicosWindow extends JFrame {
 		});
 		BtnApagarMedico.setBounds(30, 252, 154, 46);
 		contentPane_1.add(BtnApagarMedico);
+		
+		JButton btnVerCalendrioDoMedico = new JButton("Ver Calendário do Médico");
+		btnVerCalendrioDoMedico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirCalendarioMedico();
+			}
+		});
+		btnVerCalendrioDoMedico.setBounds(119, 309, 313, 46);
+		contentPane_1.add(btnVerCalendrioDoMedico);
+		
+		lblSegundos = new JLabel("Atualizará em:");
+		lblSegundos.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblSegundos.setBounds(419, 11, 124, 14);
+		contentPane_1.add(lblSegundos);
 		tblMedicos.getColumnModel().getColumn(0).setPreferredWidth(195);
 		tblMedicos.getColumnModel().getColumn(1).setPreferredWidth(123);
 		tblMedicos.getColumnModel().getColumn(2).setPreferredWidth(172);

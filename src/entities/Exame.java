@@ -13,6 +13,7 @@ public class Exame {
 		
 		this.medico = new Medico();
 		this.paciente = new Paciente();
+		this.tipoExame = new TipoExame();
 	}
 
 	public Exame(String dataRealizacao, Paciente paciente, Medico medico, TipoExame tipoExame) {
@@ -68,5 +69,13 @@ public class Exame {
 
 	public void setRealizado(boolean realizado) {
 		this.realizado = realizado;
+	}
+
+	@Override
+	public String toString() {
+		return "\n\tID do Exame: " + idExame + "\n\tMédico: " 
+	    + medico.getNome() + "\n\tPaciente: " + paciente.getNome()
+	    + "\n\tData e Hora: " + dataRealizacao + "\n\tTipo Do Exame: "
+	    + tipoExame.getNome() + "\n\tRealizado: " + realizado;
 	}
 }

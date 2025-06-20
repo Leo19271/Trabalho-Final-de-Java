@@ -53,6 +53,19 @@ public class AgendarExameWindow extends JFrame {
             }
         });
     }
+    
+	private void finalizarAplicacao() {
+		
+		System.exit(0);
+	}
+
+	private void abrirSobre() {
+		
+		SobreWindow sobreWindow = new SobreWindow(this);
+		sobreWindow.setVisible(true);
+		
+		this.setVisible(false);
+	}
 
     private void voltar() {
         this.dispose();
@@ -60,9 +73,12 @@ public class AgendarExameWindow extends JFrame {
     }
 
     private void initComponents() {
+    	
         setTitle("Agendar Exame");
+		setResizable(false);
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 498, 283);
+        setBounds(100, 100, 501, 312);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -119,6 +135,33 @@ public class AgendarExameWindow extends JFrame {
         });
         btnLimpar.setBounds(130, 200, 150, 35);
         contentPane.add(btnLimpar);
+        
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnAplicativo = new JMenu("Aplicativo");
+		menuBar.add(mnAplicativo);
+		
+		JMenuItem mntmFechar = new JMenuItem("Fechar");
+		mntmFechar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				finalizarAplicacao();
+			}
+		});
+		mnAplicativo.add(mntmFechar);
+		
+		JMenu mnAjuda = new JMenu("Ajuda");
+		menuBar.add(mnAjuda);
+		
+		JMenuItem mntmSobre = new JMenuItem("Sobre");
+		mntmSobre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirSobre();
+			}
+		});
+		mnAjuda.add(mntmSobre);
 
         setLocationRelativeTo(null);
     }

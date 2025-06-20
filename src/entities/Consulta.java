@@ -6,6 +6,7 @@ public class Consulta {
 	private String horaConsulta;
 	private Medico medico;
 	private Paciente paciente;
+	private boolean realizada;
 	
 	public Consulta() {
 		
@@ -49,5 +50,20 @@ public class Consulta {
 
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
+	}
+
+	public boolean isRealizada() {
+		return realizada;
+	}
+
+	public void setRealizada(boolean realizada) {
+		this.realizada = realizada;
+	}
+	
+	@Override
+	public String toString() {
+		return "\n\tID do Exame: " + idConsulta + "\n\tMédico: " 
+	    + medico.getNome() + "\n\tPaciente: " + paciente.getNome()
+	    + "\n\tData e Hora: " + horaConsulta + "\n\tRealizado: " + realizada;
 	}
 }

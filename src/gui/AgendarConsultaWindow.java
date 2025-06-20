@@ -54,9 +54,13 @@ public class AgendarConsultaWindow extends JFrame {
     }
 
     private void initComponents() {
+    	
         setTitle("Agendar Consulta");
+		setResizable(false);
+
+        
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 460, 250);
+        setBounds(100, 100, 462, 279);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -107,6 +111,33 @@ public class AgendarConsultaWindow extends JFrame {
         });
         btnLimpar.setBounds(100, 160, 140, 35);
         contentPane.add(btnLimpar);
+        
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnAplicativo = new JMenu("Aplicativo");
+		menuBar.add(mnAplicativo);
+		
+		JMenuItem mntmFechar = new JMenuItem("Fechar");
+		mntmFechar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				finalizarAplicacao();
+			}
+		});
+		mnAplicativo.add(mntmFechar);
+		
+		JMenu mnAjuda = new JMenu("Ajuda");
+		menuBar.add(mnAjuda);
+		
+		JMenuItem mntmSobre = new JMenuItem("Sobre");
+		mntmSobre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirSobre();
+			}
+		});
+		mnAjuda.add(mntmSobre);
 
         setLocationRelativeTo(null);
     }
@@ -162,6 +193,7 @@ public class AgendarConsultaWindow extends JFrame {
             consulta.setHoraConsulta(dataHoraFormatada);
             consulta.setPaciente(paciente);
             consulta.setMedico(medico);
+            consulta.setRealizada(false);
 
             consultaService.cadastrar(consulta);
 
@@ -174,6 +206,19 @@ public class AgendarConsultaWindow extends JFrame {
         }
     }
 
+	private void finalizarAplicacao() {
+		
+		System.exit(0);
+	}
+
+	private void abrirSobre() {
+		
+		SobreWindow sobreWindow = new SobreWindow(this);
+		sobreWindow.setVisible(true);
+		
+		this.setVisible(false);
+	}
+    
     private void limparCampos() {
         cbPaciente.setSelectedIndex(0);
         cbMedico.setSelectedIndex(0);

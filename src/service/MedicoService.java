@@ -124,4 +124,12 @@ public class MedicoService {
 
 		return medico;
 	}
+	
+	public Medico procurarMedicoPorId(int idMedico) throws SQLException, IOException {
+	   
+	    Connection conn = BancoDados.conectar();
+	    Medico medico = new MedicoDAO(conn).procurarMedicoPorId(idMedico);
+	    
+	    return medico;
+	}
 }

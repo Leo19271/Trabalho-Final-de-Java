@@ -168,6 +168,36 @@ public class PacienteDAO {
 			BancoDados.desconectar();
 		}
 	}
+	
+	public Paciente buscarPorId(int idPaciente) throws SQLException {
+		
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+
+	    try {
+	        st = conn.prepareStatement("SELECT * FROM paciente WHERE idPaciente = ?");
+	        
+	        st.setInt(1, idPaciente);
+
+	        rs = st.executeQuery();
+	        
+
+	        if (rs.next()) {
+	        	Paciente paciente = new Paciente();
+	        	
+	            paciente.setId(rs.getInt("idPaciente"));
+	            paciente.setNome(rs.getString("nome"));
+	            return paciente;
+	        }
+
+	    } finally {
+	        BancoDados.finalizarResultSet(rs);
+	        BancoDados.finalizarStatement(st);
+	        BancoDados.desconectar();
+	    }
+
+	    return null;
+	}
 
 	public Paciente procurarPacientePorNome(String nome) throws SQLException {
 		

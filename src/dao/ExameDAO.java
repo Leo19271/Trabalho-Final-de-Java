@@ -218,4 +218,171 @@ public class ExameDAO {
 
 	    return lista;
 	}
+	
+	public Exame buscarExamePorDataEHora(Exame exame) throws SQLException {
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+
+	    try {
+	        st = conn.prepareStatement("SELECT * FROM exame WHERE dataRealizacao = ?");
+	        st.setString(1, exame.getDataRealizacao());
+	        rs = st.executeQuery();
+
+	        if (rs.next()) {
+	        	
+	            Exame e = new Exame();
+	            e.setIdExame(rs.getInt("idExame"));
+	            e.setDataRealizacao(rs.getString("dataRealizacao"));
+	            e.setRealizado(rs.getBoolean("Realizado"));
+	            e.getPaciente().setId(rs.getInt("idPaciente"));
+	            e.getMedico().setId(rs.getInt("idMedico"));
+	            e.getTipoExame().setId(rs.getInt("idTipo"));
+
+	            return e;
+	        }
+
+	    } finally {
+	        BancoDados.finalizarResultSet(rs);
+	        BancoDados.finalizarStatement(st);
+	        BancoDados.desconectar();
+	    }
+
+	    return null;
+	}
+	
+	public List<Exame> buscarPorData(String data) throws SQLException {
+
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+	    List<Exame> lista = new ArrayList<>();
+
+	    try {
+	        String sql = "SELECT * FROM exame WHERE DATE(dataRealizacao) = ?";
+	        st = conn.prepareStatement(sql);
+	        st.setDate(1, Date.valueOf(data));
+
+	        rs = st.executeQuery();
+
+	        while (rs.next()) {
+	            Exame e = new Exame();
+
+	            e.setIdExame(rs.getInt("idExame"));
+	            e.setDataRealizacao(rs.getString("dataRealizacao"));
+	            e.setRealizado(rs.getBoolean("realizado"));
+	            e.getPaciente().setId(rs.getInt("idPaciente"));
+	            e.getMedico().setId(rs.getInt("idMedico"));
+	            e.getTipoExame().setId(rs.getInt("idTipo"));
+
+	            lista.add(e);
+	        }
+
+	    } finally {
+	        BancoDados.finalizarResultSet(rs);
+	        BancoDados.finalizarStatement(st);
+	    }
+
+	    return lista;
+	}
+
+	public List<Exame> buscarPorTipo(int idTipo) throws SQLException {
+
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+	    List<Exame> lista = new ArrayList<>();
+
+	    try {
+	        String sql = "SELECT * FROM exame WHERE idTipo = ?";
+	        st = conn.prepareStatement(sql);
+	        st.setInt(1, idTipo);
+
+	        rs = st.executeQuery();
+
+	        while (rs.next()) {
+	            Exame e = new Exame();
+
+	            e.setIdExame(rs.getInt("idExame"));
+	            e.setDataRealizacao(rs.getString("dataRealizacao"));
+	            e.setRealizado(rs.getBoolean("realizado"));
+	            e.getPaciente().setId(rs.getInt("idPaciente"));
+	            e.getMedico().setId(rs.getInt("idMedico"));
+	            e.getTipoExame().setId(rs.getInt("idTipo"));
+
+	            lista.add(e);
+	        }
+
+	    } finally {
+	        BancoDados.finalizarResultSet(rs);
+	        BancoDados.finalizarStatement(st);
+	    }
+
+	    return lista;
+	}
+
+	public List<Exame> buscarPorDataETipo(Exame exame) throws SQLException {
+
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+	    List<Exame> lista = new ArrayList<>();
+
+	    try {
+	        String sql = "SELECT * FROM exame WHERE DATE(dataRealizacao) = ? AND idTipo = ?";
+	        st = conn.prepareStatement(sql);
+	        st.setDate(1, Date.valueOf(exame.getDataRealizacao()));
+	        st.setInt(2, exame.getTipoExame().getId());
+
+	        rs = st.executeQuery();
+
+	        while (rs.next()) {
+	            Exame e = new Exame();
+
+	            e.setIdExame(rs.getInt("idExame"));
+	            e.setDataRealizacao(rs.getString("dataRealizacao"));
+	            e.setRealizado(rs.getBoolean("realizado"));
+	            e.getPaciente().setId(rs.getInt("idPaciente"));
+	            e.getMedico().setId(rs.getInt("idMedico"));
+	            e.getTipoExame().setId(rs.getInt("idTipo"));
+
+	            lista.add(e);
+	        }
+
+	    } finally {
+	        BancoDados.finalizarResultSet(rs);
+	        BancoDados.finalizarStatement(st);
+	    }
+
+	    return lista;
+	}
+
+	public List<Exame> buscarTodos() throws SQLException {
+
+	    PreparedStatement st = null;
+	    ResultSet rs = null;
+	    List<Exame> lista = new ArrayList<>();
+
+	    try {
+	        String sql = "SELECT * FROM exame";
+	        st = conn.prepareStatement(sql);
+
+	        rs = st.executeQuery();
+
+	        while (rs.next()) {
+	            Exame e = new Exame();
+
+	            e.setIdExame(rs.getInt("idExame"));
+	            e.setDataRealizacao(rs.getString("dataRealizacao"));
+	            e.setRealizado(rs.getBoolean("realizado"));
+	            e.getPaciente().setId(rs.getInt("idPaciente"));
+	            e.getMedico().setId(rs.getInt("idMedico"));
+	            e.getTipoExame().setId(rs.getInt("idTipo"));
+
+	            lista.add(e);
+	        }
+
+	    } finally {
+	        BancoDados.finalizarResultSet(rs);
+	        BancoDados.finalizarStatement(st);
+	    }
+
+	    return lista;
+	}
 }

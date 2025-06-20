@@ -3,17 +3,24 @@ package gui;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -58,6 +65,8 @@ public class CadastrarPacienteWindow extends JFrame {
 	private JFormattedTextField formattedCEP;
 	private JFormattedTextField formattedDataNascimento;
 	private PacienteService pacienteService;
+	private JLabel lblFoto;
+	private File fotoArquivo;
 	
 	public CadastrarPacienteWindow(PacientesWindow pacientesWindow) {
 		
@@ -139,7 +148,7 @@ public class CadastrarPacienteWindow extends JFrame {
 			paciente.getEndereco().setBairro(this.txtBairro.getText());
 			paciente.getEndereco().setRua(this.txtRua.getText());
 			paciente.getEndereco().setNumero(this.txtNum.getText());
-			
+			paciente.setFoto(pegarFotoDoLabel(lblFoto));
 			
 			
 			this.pacienteService.cadastrar(paciente);
@@ -159,6 +168,40 @@ public class CadastrarPacienteWindow extends JFrame {
 
 		}
 		
+	}
+	
+	private byte[] pegarFotoDoLabel(JLabel lblFoto) {
+	    try {
+
+	        ImageIcon icon = (ImageIcon) lblFoto.getIcon();
+	        if (icon == null) {
+	            return null;
+	        }
+	        
+
+	        Image image = icon.getImage();
+	        BufferedImage buffered = new BufferedImage(
+	            image.getWidth(null),
+	            image.getHeight(null),
+	            BufferedImage.TYPE_INT_ARGB
+	        );
+	        
+	        java.awt.Graphics2D bGr = buffered.createGraphics();
+	        bGr.drawImage(image, 0, 0, null);
+	        bGr.dispose();
+
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        ImageIO.write(buffered, "png", baos);
+	        baos.flush();
+
+	        byte[] imageInByte = baos.toByteArray();
+	        baos.close();
+
+	        return imageInByte;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return null;
+	    }
 	}
 	
 	private void verificarCampos() {
@@ -193,6 +236,20 @@ public class CadastrarPacienteWindow extends JFrame {
 			return this.rdbtnFeminino.getText();
 		}
 		return null;
+	}
+	
+	private void enviarFoto() {
+		
+	    JFileChooser fileChooser = new JFileChooser();
+	    int resultado = fileChooser.showOpenDialog(this);
+	    
+	    if (resultado == JFileChooser.APPROVE_OPTION) {
+	        fotoArquivo = fileChooser.getSelectedFile();
+	        ImageIcon icon = new ImageIcon(fotoArquivo.getAbsolutePath());
+
+	        Image img = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
+	        lblFoto.setIcon(new ImageIcon(img));
+	    }
 	}
 	
 	private void initComponents() {
@@ -348,9 +405,23 @@ public class CadastrarPacienteWindow extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Foto", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(415, 11, 115, 130);
+		panel_1.setBounds(415, 11, 115, 143);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
+		
+		lblFoto = new JLabel("");
+		lblFoto.setBounds(10, 11, 95, 95);
+		panel_1.add(lblFoto);
+		
+		JButton btnEnviarFoto = new JButton("Enviar Foto\r\n");
+		btnEnviarFoto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				enviarFoto();
+			}
+		});
+		btnEnviarFoto.setBounds(10, 113, 89, 23);
+		panel_1.add(btnEnviarFoto);
 		
 		JLabel lblFormaPagamento = new JLabel("Forma de Pagamento:");
 		lblFormaPagamento.setFont(new Font("Tahoma", Font.PLAIN, 13));

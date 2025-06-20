@@ -76,26 +76,30 @@ public class MedicosWindow extends JFrame {
 		this.salvarThreadRodando = false;
 	}
 	
+	
     private void iniciarThread() {
     	
-        Thread salvarThread = new Thread(() -> {
-            while (salvarThreadRodando) {
-                try {
-                	for(int i = 0; i < 10; i++) {
-                		this.lblSegundos.setText("Atualizará em " + (String.valueOf(segundos) + "s"));
-                		Thread.sleep(1000);
-                		segundos--;
-                	}
-                	segundos = 10;
-                    this.buscarMedicos();  
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
-        salvarThread.setDaemon(true);
-        salvarThread.start();
+    	Thread salvarThread = new Thread(new Runnable() {
+    	    @Override
+    	    public void run() {
+    	        while (salvarThreadRodando) {
+    	            try {
+    	                for (int i = 0; i < 10; i++) {
+    	                    lblSegundos.setText(String.valueOf(segundos) + "s");
+    	                    Thread.sleep(1000);
+    	                    segundos--;
+    	                }
+    	                segundos = 10;
+    	                buscarMedicos();
+    	            } catch (InterruptedException e) {
+    	                Thread.currentThread().interrupt();
+    	                break;
+    	            }
+    	        }
+    	    }
+    	});
+    	salvarThread.setDaemon(true);
+    	salvarThread.start();
     }
 	
 	private void finalizarAplicacao() {

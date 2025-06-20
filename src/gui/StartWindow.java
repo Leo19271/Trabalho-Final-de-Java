@@ -101,6 +101,20 @@ public class StartWindow extends JFrame {
 	    this.setVisible(false);
 	}
 	
+	private void abrirCalendarioConsultas() {
+	    CalendarioConsultasWindow calendarioConsultasWindow = new CalendarioConsultasWindow(this);
+	    calendarioConsultasWindow.setVisible(true);
+
+	    this.setVisible(false);
+	}
+	
+	private void abrirCalendarioExames() {
+	    CalendarioExamesWindow calendarioExamesWindow = new CalendarioExamesWindow(this);
+	    calendarioExamesWindow.setVisible(true);
+
+	    this.setVisible(false);
+	}
+	
 	private void inicializarComponentes() {
 		
 		setTitle("Aplicativo para Clínicas");
@@ -202,10 +216,22 @@ public class StartWindow extends JFrame {
 		contentPane.add(btnTipoExame);
 		
 		JButton btnCalendarioConsulta = new JButton("Calendario de Consultas");
+		btnCalendarioConsulta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirCalendarioConsultas();
+			}
+		});
 		btnCalendarioConsulta.setBounds(28, 101, 154, 34);
 		contentPane.add(btnCalendarioConsulta);
 		
 		JButton btnCadastrarConsulta_1 = new JButton("Calendario de Exames\r\n");
+		btnCadastrarConsulta_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				abrirCalendarioExames();
+			}
+		});
 		btnCadastrarConsulta_1.setBounds(192, 101, 192, 34);
 		contentPane.add(btnCadastrarConsulta_1);
 		

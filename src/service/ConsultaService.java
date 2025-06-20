@@ -112,4 +112,52 @@ public class ConsultaService {
 
         return listaConsultas;
     }
+    
+    public Consulta procurarConsultaPorDataEHora(Consulta consulta) throws SQLException, IOException {
+    	
+    	Connection conn = BancoDados.conectar();
+    	Consulta c1 = new ConsultaDAO(conn).buscarConsultaPorDataEHora(consulta);
+    	
+    	if (c1.getMedico().getNome().equals("")) {
+    		return null;
+    	}else {
+    		return c1;
+    	}
+    }
+    
+    public List<Consulta> buscarTodasConsultas() throws SQLException, IOException {
+        Connection conn = BancoDados.conectar();
+        List<Consulta> listaConsultas = new ConsultaDAO(conn).buscarTodasConsultas();
+
+        PacienteService pacienteService = new PacienteService();
+        MedicoService medicoService = new MedicoService();
+
+        for (Consulta consulta : listaConsultas) {
+            Paciente paciente = pacienteService.buscarPorId(consulta.getPaciente().getId());
+            consulta.setPaciente(paciente);
+
+            Medico medico = medicoService.procurarMedicoPorId(consulta.getMedico().getId());
+            consulta.setMedico(medico);
+        }
+
+        return listaConsultas;
+    }
+
+    public List<Consulta> buscarConsultasPorData(String data) throws SQLException, IOException {
+        Connection conn = BancoDados.conectar();
+        List<Consulta> listaConsultas = new ConsultaDAO(conn).buscarConsultasPorData(data);
+
+        PacienteService pacienteService = new PacienteService();
+        MedicoService medicoService = new MedicoService();
+
+        for (Consulta consulta : listaConsultas) {
+            Paciente paciente = pacienteService.buscarPorId(consulta.getPaciente().getId());
+            consulta.setPaciente(paciente);
+
+            Medico medico = medicoService.procurarMedicoPorId(consulta.getMedico().getId());
+            consulta.setMedico(medico);
+        }
+
+        return listaConsultas;
+    }
 }

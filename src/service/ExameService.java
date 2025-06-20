@@ -146,4 +146,121 @@ public class ExameService {
 		
         return listaExames;
     }
+    
+    public Exame procurarExamePorDataEHora(Exame exame) throws SQLException, IOException {
+    	
+    	Connection conn = BancoDados.conectar();
+    	Exame e1 = new ExameDAO(conn).buscarExamePorDataEHora(exame);
+    	
+    	if (e1.getMedico().getNome().equals("")) {
+    		return null;
+    		
+    	}else {
+    		
+    		return e1;
+    	}
+    }
+    
+    public List<Exame> buscarExamesPorData(String data) throws SQLException, IOException {
+        
+        Connection conn = BancoDados.conectar();
+        List<Exame> listaExames = new ExameDAO(conn).buscarPorData(data);
+
+        PacienteService pacienteService = new PacienteService();
+        MedicoService medicoService = new MedicoService();
+        TipoExameService tipoExameService = new TipoExameService();
+
+        for (Exame exame1 : listaExames) {
+            Paciente paciente = pacienteService.buscarPorId(exame1.getPaciente().getId());
+            exame1.setPaciente(paciente);
+
+            Medico medico = medicoService.procurarMedicoPorId(exame1.getMedico().getId());
+            exame1.setMedico(medico);
+
+            TipoExame tipoExame = tipoExameService.buscarPorId(exame1.getTipoExame().getId());
+            exame1.setTipoExame(tipoExame);
+        }
+
+        return listaExames;
+    }
+
+    public List<Exame> buscarExamesPorTipo(String nomeTipo) throws SQLException, IOException {
+        
+        TipoExameService tipoExameService = new TipoExameService();
+        TipoExame tipoExame = tipoExameService.buscarPorNome(nomeTipo);
+        
+        Exame exame = new Exame();
+        exame.setTipoExame(tipoExame);
+        
+        Connection conn = BancoDados.conectar();
+        List<Exame> listaExames = new ExameDAO(conn).buscarPorTipo(exame.getTipoExame().getId());
+
+        PacienteService pacienteService = new PacienteService();
+        MedicoService medicoService = new MedicoService();
+
+        for (Exame exame1 : listaExames) {
+            Paciente paciente = pacienteService.buscarPorId(exame1.getPaciente().getId());
+            exame1.setPaciente(paciente);
+
+            Medico medico = medicoService.procurarMedicoPorId(exame1.getMedico().getId());
+            exame1.setMedico(medico);
+
+            TipoExame tipo = tipoExameService.buscarPorId(exame1.getTipoExame().getId());
+            exame1.setTipoExame(tipo);
+        }
+
+        return listaExames;
+    }
+
+    public List<Exame> buscarExamesPorDataETipo(String data, String nomeTipo) throws SQLException, IOException {
+        
+        TipoExameService tipoExameService = new TipoExameService();
+        TipoExame tipoExame = tipoExameService.buscarPorNome(nomeTipo);
+        
+        Exame exame = new Exame();
+        exame.setDataRealizacao(data);
+        exame.setTipoExame(tipoExame);
+        
+        Connection conn = BancoDados.conectar();
+        List<Exame> listaExames = new ExameDAO(conn).buscarPorDataETipo(exame);
+
+        PacienteService pacienteService = new PacienteService();
+        MedicoService medicoService = new MedicoService();
+
+        for (Exame exame1 : listaExames) {
+            Paciente paciente = pacienteService.buscarPorId(exame1.getPaciente().getId());
+            exame1.setPaciente(paciente);
+
+            Medico medico = medicoService.procurarMedicoPorId(exame1.getMedico().getId());
+            exame1.setMedico(medico);
+
+            TipoExame tipo = tipoExameService.buscarPorId(exame1.getTipoExame().getId());
+            exame1.setTipoExame(tipo);
+        }
+
+        return listaExames;
+    }
+
+    public List<Exame> buscarTodosExames() throws SQLException, IOException {
+        
+        Connection conn = BancoDados.conectar();
+        List<Exame> listaExames = new ExameDAO(conn).buscarTodos();
+
+        PacienteService pacienteService = new PacienteService();
+        MedicoService medicoService = new MedicoService();
+        TipoExameService tipoExameService = new TipoExameService();
+
+        for (Exame exame1 : listaExames) {
+            Paciente paciente = pacienteService.buscarPorId(exame1.getPaciente().getId());
+            exame1.setPaciente(paciente);
+
+            Medico medico = medicoService.procurarMedicoPorId(exame1.getMedico().getId());
+            exame1.setMedico(medico);
+
+            TipoExame tipoExame = tipoExameService.buscarPorId(exame1.getTipoExame().getId());
+            exame1.setTipoExame(tipoExame);
+        }
+
+        return listaExames;
+    }
 }

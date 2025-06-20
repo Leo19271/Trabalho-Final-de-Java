@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
+import entities.Consulta;
 import entities.Exame;
 import entities.Medico;
 import entities.Paciente;
@@ -70,6 +71,18 @@ public class AgendarExameWindow extends JFrame {
     private void voltar() {
         this.dispose();
         this.startWindow.setVisible(true);
+    }
+    
+    private Exame verificarHoraExame(Exame exame) {
+        
+    	try{
+    		
+    	return exameService.procurarExamePorDataEHora(exame);
+    
+    	}catch(Exception e) {
+    		
+    	}
+    	return null;
     }
 
     private void initComponents() {
@@ -229,6 +242,13 @@ public class AgendarExameWindow extends JFrame {
             exame.setPaciente(paciente);
             exame.setMedico(medico);
             exame.setTipoExame(tipoExame);
+            
+            Exame e1 = verificarHoraExame(exame);
+            
+            if(e1 == null) {
+            	JOptionPane.showMessageDialog(this, "Já existe um exame neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             
             exameService.cadastrar(exame);
 

@@ -9,6 +9,7 @@ public class Paciente {
 	private String telefone;
 	private String formaPagamento;
 	private Endereco endereco;
+	private byte[] foto;
 
 	public Paciente() {
 		
@@ -83,5 +84,13 @@ public class Paciente {
 
 	public String toString() {
 	    return this.nome;
+	}
+	
+	public byte[] getFoto() {
+		return foto;
+	}
+
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
 	}
 }

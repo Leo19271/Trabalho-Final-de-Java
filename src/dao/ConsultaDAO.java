@@ -209,4 +209,94 @@ public class ConsultaDAO {
 
         return lista;
     }
+    
+    public Consulta buscarConsultaPorDataEHora(Consulta consulta) throws SQLException {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = conn.prepareStatement("SELECT * FROM consulta WHERE horaConsulta = ?");
+            st.setString(1, consulta.getHoraConsulta());
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                Consulta c = new Consulta();
+                c.setIdConsulta(rs.getInt("idConsulta"));
+                c.setHoraConsulta(rs.getString("horaConsulta"));
+                c.setRealizada(rs.getBoolean("Realizado"));
+                c.getPaciente().setId(rs.getInt("idPaciente"));
+                c.getMedico().setId(rs.getInt("idMedico"));
+
+                return c;
+            }
+
+        } finally {
+            BancoDados.finalizarResultSet(rs);
+            BancoDados.finalizarStatement(st);
+            BancoDados.desconectar();
+        }
+
+        return null;
+    }
+    
+    public List<Consulta> buscarTodasConsultas() throws SQLException {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        List<Consulta> lista = new ArrayList<>();
+
+        try {
+            st = conn.prepareStatement("SELECT * FROM consulta");
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                Consulta consulta = new Consulta();
+                consulta.setIdConsulta(rs.getInt("idConsulta"));
+                consulta.setHoraConsulta(rs.getString("horaConsulta"));
+                consulta.setRealizada(rs.getBoolean("realizado"));
+                consulta.getMedico().setId(rs.getInt("idMedico"));
+                consulta.getPaciente().setId(rs.getInt("idPaciente"));
+
+
+                lista.add(consulta);
+            }
+
+        } finally {
+            BancoDados.finalizarResultSet(rs);
+            BancoDados.finalizarStatement(st);
+            BancoDados.desconectar();
+        }
+
+        return lista;
+    }
+
+    public List<Consulta> buscarConsultasPorData(String data) throws SQLException {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        List<Consulta> lista = new ArrayList<>();
+
+        try {
+            st = conn.prepareStatement("SELECT * FROM consulta WHERE DATE(horaConsulta) = ?");
+            st.setString(1, data);
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+            	
+                Consulta consulta = new Consulta();
+                consulta.setIdConsulta(rs.getInt("idConsulta"));
+                consulta.setHoraConsulta(rs.getString("horaConsulta"));
+                consulta.setRealizada(rs.getBoolean("realizado"));
+                consulta.getMedico().setId(rs.getInt("idMedico"));
+                consulta.getPaciente().setId(rs.getInt("idPaciente"));
+
+                lista.add(consulta);
+            }
+
+        } finally {
+            BancoDados.finalizarResultSet(rs);
+            BancoDados.finalizarStatement(st);
+            BancoDados.desconectar();
+        }
+
+        return lista;
+    }
 }

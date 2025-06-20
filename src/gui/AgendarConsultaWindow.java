@@ -52,7 +52,19 @@ public class AgendarConsultaWindow extends JFrame {
         this.dispose();
         this.startWindow.setVisible(true);
     }
-
+    
+    private Consulta verificarHoraConsulta(Consulta consulta) {
+    
+    	try{
+    		
+    	return consultaService.procurarConsultaPorDataEHora(consulta);
+    
+    	}catch(Exception e) {
+    		
+    	}
+    	return null;
+    }
+    
     private void initComponents() {
     	
         setTitle("Agendar Consulta");
@@ -195,6 +207,13 @@ public class AgendarConsultaWindow extends JFrame {
             consulta.setMedico(medico);
             consulta.setRealizada(false);
 
+            Consulta c1 = verificarHoraConsulta(consulta);
+            
+        	if(c1 == null) {
+                JOptionPane.showMessageDialog(this, "Já existe uma consulta neste horário.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+        	}
+            
             consultaService.cadastrar(consulta);
 
             JOptionPane.showMessageDialog(this, "Consulta agendada com sucesso!");

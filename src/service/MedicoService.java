@@ -33,7 +33,6 @@ public class MedicoService {
 		new MedicoDAO(conn).excluir(medico.getId());
 		
 		EnderecoService enderecoService = new EnderecoService();
-		
 		enderecoService.excluirEndereco(medico.getEndereco().getIdEndereco());
 	}
 	

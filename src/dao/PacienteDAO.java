@@ -70,15 +70,16 @@
 	
 			try {
 	
-				st = conn.prepareStatement("update paciente set nome = ?, dataNascimento = ?, sexo = ?, telefone = ?, formaPagamento = ?, idEndereco = ? where idPaciente = ?");
+				st = conn.prepareStatement("update paciente set nome = ?, dataNascimento = ?, sexo = ?, telefone = ?, foto = ?, formaPagamento = ?, idEndereco = ? where idPaciente = ?");
 	
 				st.setString(1, paciente.getNome());
 				st.setDate(2, Date.valueOf(paciente.getDataNascimento()));
 				st.setString(3, paciente.getSexo());
 				st.setString(4, paciente.getTelefone());
-				st.setString(5, paciente.getFormaPagamento());
-				st.setInt(6, paciente.getEndereco().getIdEndereco());
-				st.setDouble(7, paciente.getId());
+				st.setBytes(5, paciente.getFoto());
+				st.setString(6, paciente.getFormaPagamento());
+				st.setInt(7, paciente.getEndereco().getIdEndereco());
+				st.setDouble(8, paciente.getId());
 	
 				st.executeUpdate();
 	
@@ -114,6 +115,7 @@
 					paciente.setTelefone(rs.getString("telefone"));
 					paciente.setFormaPagamento(rs.getString("formaPagamento"));
 					paciente.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+					paciente.setFoto(rs.getBytes("foto"));
 								
 					listaPacientes.add(paciente);
 				}
@@ -154,6 +156,8 @@
 					paciente.setTelefone(rs.getString("telefone"));
 					paciente.setFormaPagamento(rs.getString("formaPagamento"));
 					paciente.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+					paciente.setFoto(rs.getBytes("foto"));
+
 					
 					listaPacientes.add(paciente);
 	
@@ -185,8 +189,15 @@
 		        if (rs.next()) {
 		        	Paciente paciente = new Paciente();
 		        	
-		            paciente.setId(rs.getInt("idPaciente"));
-		            paciente.setNome(rs.getString("nome"));
+					paciente.setId(rs.getInt("idPaciente"));
+					paciente.setNome(rs.getString("nome"));
+					paciente.setDataNascimento(rs.getString("dataNascimento"));
+					paciente.setSexo(rs.getString("sexo"));
+					paciente.setTelefone(rs.getString("telefone"));
+					paciente.setFormaPagamento(rs.getString("formaPagamento"));
+					paciente.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+					paciente.setFoto(rs.getBytes("foto"));
+		            
 		            return paciente;
 		        }
 	
@@ -223,6 +234,7 @@
 					paciente.setTelefone(rs.getString("telefone"));
 					paciente.setFormaPagamento(rs.getString("formaPagamento"));
 					paciente.getEndereco().setIdEndereco(rs.getInt("idEndereco"));
+					paciente.setFoto(rs.getBytes("foto"));
 					
 					return paciente;
 				}

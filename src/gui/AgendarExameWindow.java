@@ -253,6 +253,7 @@ public class AgendarExameWindow extends JFrame {
             exameService.cadastrar(exame);
 
             JOptionPane.showMessageDialog(this, "Exame agendado com sucesso!");
+            
             voltar();
 
         } catch (Exception e) {

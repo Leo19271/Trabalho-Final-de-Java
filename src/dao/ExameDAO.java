@@ -224,21 +224,18 @@ public class ExameDAO {
 	    ResultSet rs = null;
 
 	    try {
-	        st = conn.prepareStatement("SELECT * FROM exame WHERE dataRealizacao = ?");
+	    	System.out.println(exame.getDataRealizacao());
+	    	
+	    	st = conn.prepareStatement("SELECT * FROM exame WHERE dataRealizacao = ?");
+	        
 	        st.setString(1, exame.getDataRealizacao());
+	        
 	        rs = st.executeQuery();
 
 	        if (rs.next()) {
 	        	
-	            Exame e = new Exame();
-	            e.setIdExame(rs.getInt("idExame"));
-	            e.setDataRealizacao(rs.getString("dataRealizacao"));
-	            e.setRealizado(rs.getBoolean("Realizado"));
-	            e.getPaciente().setId(rs.getInt("idPaciente"));
-	            e.getMedico().setId(rs.getInt("idMedico"));
-	            e.getTipoExame().setId(rs.getInt("idTipo"));
-
-	            return e;
+	        	return null;
+	        	
 	        }
 
 	    } finally {
@@ -247,7 +244,7 @@ public class ExameDAO {
 	        BancoDados.desconectar();
 	    }
 
-	    return null;
+	    return exame;
 	}
 	
 	public List<Exame> buscarPorData(String data) throws SQLException {

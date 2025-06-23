@@ -220,14 +220,8 @@ public class ConsultaDAO {
             rs = st.executeQuery();
 
             if (rs.next()) {
-                Consulta c = new Consulta();
-                c.setIdConsulta(rs.getInt("idConsulta"));
-                c.setHoraConsulta(rs.getString("horaConsulta"));
-                c.setRealizada(rs.getBoolean("Realizado"));
-                c.getPaciente().setId(rs.getInt("idPaciente"));
-                c.getMedico().setId(rs.getInt("idMedico"));
-
-                return c;
+            	
+            	return null;
             }
 
         } finally {
@@ -236,7 +230,7 @@ public class ConsultaDAO {
             BancoDados.desconectar();
         }
 
-        return null;
+        return consulta;
     }
     
     public List<Consulta> buscarTodasConsultas() throws SQLException {
